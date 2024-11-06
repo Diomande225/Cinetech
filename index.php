@@ -146,44 +146,37 @@ $content = $controller->getPopularContent();
                 <div class="flex overflow-x-auto hide-scrollbar px-12 space-x-4">
                     <?php foreach (array_slice($content['trending'], 0, 10) as $item): ?>
                         <?php 
+                            // Déterminer si c'est un film ou une série
                             $contentType = isset($item['title']) ? 'movie' : 'tv';
-                            $contentUrl = $contentType === 'movie' ? "/movie/{$item['id']}" : "/tv-show/{$item['id']}";
+                            $contentUrl = $contentType === 'movie' ? "/movie/{$item['id']}" : "/tv/{$item['id']}";
                         ?>
-                        <div class="flex-none w-[250px]">
-                            <a href="<?= $contentUrl ?>" class="block">
-                                <div class="relative group/item transition-transform duration-300 hover:scale-110 hover:z-10">
-                                    <img src="https://image.tmdb.org/t/p/w500<?= $item['poster_path'] ?>" 
-                                         alt="<?= htmlspecialchars($item['title'] ?? $item['name']) ?>"
-                                         class="rounded-md w-full">
-                                    <div class="absolute inset-0 bg-black opacity-0 group-hover/item:opacity-50 transition-opacity rounded-md"></div>
-                                    <div class="absolute inset-x-0 bottom-0 p-4 opacity-0 group-hover/item:opacity-100 transition-opacity">
-                                        <h3 class="text-sm font-bold"><?= htmlspecialchars($item['title'] ?? $item['name']) ?></h3>
-                                        <div class="flex items-center justify-between mt-2">
-                                            <div class="flex items-center space-x-2">
-                                                <button class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:bg-opacity-80">
-                                                    <i class="fas fa-play text-sm"></i>
-                                                </button>
-                                                <button class="w-8 h-8 rounded-full border border-white flex items-center justify-center hover:bg-white hover:text-black">
-                                                    <i class="fas fa-plus text-sm"></i>
-                                                </button>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <span class="text-sm">
-                                                    <i class="fas fa-star text-yellow-500 mr-1"></i>
-                                                    <?= number_format($item['vote_average'], 1) ?>
-                                                </span>
-                                            </div>
+                        <a href="<?= $contentUrl ?>" class="flex-none w-[250px] group/card">
+                            <div class="relative group/item transition-transform duration-300 hover:scale-110 hover:z-10">
+                                <img src="https://image.tmdb.org/t/p/w500<?= $item['poster_path'] ?>" 
+                                     alt="<?= htmlspecialchars($item['title'] ?? $item['name']) ?>"
+                                     class="rounded-md w-full">
+                                <div class="absolute inset-0 bg-black opacity-0 group-hover/item:opacity-50 transition-opacity rounded-md"></div>
+                                <div class="absolute inset-x-0 bottom-0 p-4 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                                    <h3 class="text-sm font-bold"><?= htmlspecialchars($item['title'] ?? $item['name']) ?></h3>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <div class="flex items-center space-x-2">
+                                            <button onclick="event.preventDefault(); playTrailer(<?= $item['id'] ?>)" 
+                                                    class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:bg-opacity-80">
+                                                <i class="fas fa-play text-sm"></i>
+                                            </button>
+                                            <button onclick="event.preventDefault(); toggleFavorite(<?= $item['id'] ?>)" 
+                                                    class="w-8 h-8 rounded-full border border-white flex items-center justify-center hover:bg-white hover:text-black">
+                                                <i class="fas fa-plus text-sm"></i>
+                                            </button>
                                         </div>
-                                        <div class="mt-2 text-xs">
-                                            <?php 
-                                                $date = isset($item['release_date']) ? $item['release_date'] : ($item['first_air_date'] ?? '');
-                                                echo $date ? date('Y', strtotime($date)) : '';
-                                            ?>
+                                        <div class="text-sm">
+                                            <i class="fas fa-star text-yellow-500"></i>
+                                            <?= number_format($item['vote_average'], 1) ?>
                                         </div>
                                     </div>
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -195,38 +188,33 @@ $content = $controller->getPopularContent();
             <div class="relative group">
                 <div class="flex overflow-x-auto hide-scrollbar px-12 space-x-4">
                     <?php foreach ($content['movies'] as $movie): ?>
-                        <div class="flex-none w-[250px]">
-                            <a href="/movie/<?= $movie['id'] ?>" class="block">
-                                <div class="relative group/item transition-transform duration-300 hover:scale-110 hover:z-10">
-                                    <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" 
-                                         alt="<?= htmlspecialchars($movie['title']) ?>"
-                                         class="rounded-md w-full">
-                                    <div class="absolute inset-0 bg-black opacity-0 group-hover/item:opacity-50 transition-opacity rounded-md"></div>
-                                    <div class="absolute inset-x-0 bottom-0 p-4 opacity-0 group-hover/item:opacity-100 transition-opacity">
-                                        <h3 class="text-sm font-bold"><?= htmlspecialchars($movie['title']) ?></h3>
-                                        <div class="flex items-center justify-between mt-2">
-                                            <div class="flex items-center space-x-2">
-                                                <button class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:bg-opacity-80">
-                                                    <i class="fas fa-play text-sm"></i>
-                                                </button>
-                                                <button class="w-8 h-8 rounded-full border border-white flex items-center justify-center hover:bg-white hover:text-black">
-                                                    <i class="fas fa-plus text-sm"></i>
-                                                </button>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <span class="text-sm">
-                                                    <i class="fas fa-star text-yellow-500 mr-1"></i>
-                                                    <?= number_format($movie['vote_average'], 1) ?>
-                                                </span>
-                                            </div>
+                        <a href="/movie/<?= $movie['id'] ?>" class="flex-none w-[250px] group/card">
+                            <div class="relative group/item transition-transform duration-300 hover:scale-110 hover:z-10">
+                                <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" 
+                                     alt="<?= htmlspecialchars($movie['title']) ?>"
+                                     class="rounded-md w-full">
+                                <div class="absolute inset-0 bg-black opacity-0 group-hover/item:opacity-50 transition-opacity rounded-md"></div>
+                                <div class="absolute inset-x-0 bottom-0 p-4 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                                    <h3 class="text-sm font-bold"><?= htmlspecialchars($movie['title']) ?></h3>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <div class="flex items-center space-x-2">
+                                            <button onclick="event.preventDefault(); playTrailer(<?= $movie['id'] ?>)" 
+                                                    class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:bg-opacity-80">
+                                                <i class="fas fa-play text-sm"></i>
+                                            </button>
+                                            <button onclick="event.preventDefault(); toggleFavorite(<?= $movie['id'] ?>)" 
+                                                    class="w-8 h-8 rounded-full border border-white flex items-center justify-center hover:bg-white hover:text-black">
+                                                <i class="fas fa-plus text-sm"></i>
+                                            </button>
                                         </div>
-                                        <div class="mt-2 text-xs">
-                                            <?= date('Y', strtotime($movie['release_date'])) ?>
+                                        <div class="text-sm">
+                                            <i class="fas fa-star text-yellow-500"></i>
+                                            <?= number_format($movie['vote_average'], 1) ?>
                                         </div>
                                     </div>
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     <?php endforeach; ?>
                 </div>
             </div>
