@@ -4,52 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $pageTitle ?? 'La Cinétech' ?></title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="/Cinetech/public/css/favorites.css" rel="stylesheet">
+    <script>
+        const isAuthenticated = <?= isset($_SESSION['user']) ? 'true' : 'false' ?>;
+    </script>
+    <script src="/Cinetech/public/js/favorites.js" defer></script>
 </head>
-<body class="bg-black text-white">
-    <header class="fixed w-full z-50 transition-all duration-300" id="navbar">
-        <nav class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-8">
-                    <a href="/" class="text-red-600 text-3xl font-bold">CINÉTECH</a>
-                    <div class="hidden md:flex space-x-6">
-                        <a href="/" class="text-sm hover:text-gray-300">Accueil</a>
-                        <a href="/movies" class="text-sm hover:text-gray-300">Films</a>
-                        <a href="/tv-shows" class="text-sm hover:text-gray-300">Séries</a>
-                        <a href="/my-list" class="text-sm hover:text-gray-300">Ma Liste</a>
+<body class="bg-black text-white min-h-screen">
+    <header>
+        <nav id="navbar" class="fixed w-full z-50 transition-colors duration-300">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <!-- Logo -->
+                    <a href="/Cinetech" class="text-red-600 text-2xl font-bold">CINÉTECH</a>
+
+                    <!-- Navigation principale -->
+                    <div class="flex items-center space-x-8">
+                        <a href="/Cinetech" class="hover:text-red-600 transition">Accueil</a>
+                        <a href="/Cinetech/movies" class="hover:text-red-600 transition">Films</a>
+                        <a href="/Cinetech/tv-shows" class="hover:text-red-600 transition">Séries</a>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <a href="/Cinetech/favorites" class="hover:text-red-600 transition">Ma Liste</a>
+                        <?php endif; ?>
                     </div>
-                </div>
-                
-                <div class="flex items-center space-x-6">
-                    <div class="relative">
-                        <input type="text" 
-                               placeholder="Titres, personnes, genres" 
-                               class="bg-black bg-opacity-50 border border-gray-600 text-sm rounded-full px-4 py-2 w-48 focus:outline-none focus:border-white transition-all">
-                    </div>
-                    
-                    <?php if (isset($_SESSION['user'])): ?>
-                        <div class="relative group">
-                            <div class="flex items-center space-x-2 cursor-pointer">
-                                <img src="/assets/images/avatar.png" alt="Profile" class="w-8 h-8 rounded">
-                                <i class="fas fa-caret-down"></i>
-                            </div>
-                            <div class="absolute right-0 mt-2 w-48 bg-black bg-opacity-90 border border-gray-700 rounded shadow-lg hidden group-hover:block">
-                                <div class="py-2">
-                                    <p class="px-4 text-sm text-gray-300"><?= htmlspecialchars($_SESSION['user']['username']) ?></p>
-                                    <a href="/profile" class="block px-4 py-2 text-sm hover:bg-gray-800">Gérer le profil</a>
-                                    <a href="/favorites" class="block px-4 py-2 text-sm hover:bg-gray-800">Ma liste</a>
-                                    <a href="/settings" class="block px-4 py-2 text-sm hover:bg-gray-800">Paramètres</a>
-                                    <hr class="border-gray-700 my-2">
-                                    <a href="/logout" class="block px-4 py-2 text-sm hover:bg-gray-800">Se déconnecter</a>
+
+                    <!-- Recherche et Authentification -->
+                    <div class="flex items-center space-x-4">
+                        <form action="/Cinetech/search" method="GET" class="relative">
+                            <input type="text" 
+                                   name="q" 
+                                   placeholder="Titres, personnes, genres" 
+                                   class="bg-gray-800 text-white px-4 py-2 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-red-600">
+                        </form>
+                        
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <div class="relative group">
+                                <button class="flex items-center space-x-2 hover:text-red-600 transition">
+                                    <span><?= htmlspecialchars($_SESSION['user']['username']) ?></span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="absolute right-0 mt-2 w-48 bg-gray-900 rounded-lg shadow-lg py-2 hidden group-hover:block">
+                                    <a href="/Cinetech/profile" class="block px-4 py-2 hover:bg-gray-800 transition">
+                                        <i class="fas fa-user mr-2"></i>Profil
+                                    </a>
+                                    <a href="/Cinetech/favorites" class="block px-4 py-2 hover:bg-gray-800 transition">
+                                        <i class="fas fa-heart mr-2"></i>Favoris
+                                    </a>
+                                    <a href="/Cinetech/settings" class="block px-4 py-2 hover:bg-gray-800 transition">
+                                        <i class="fas fa-cog mr-2"></i>Paramètres
+                                    </a>
+                                    <hr class="my-2 border-gray-700">
+                                    <a href="/Cinetech/logout" class="block px-4 py-2 hover:bg-gray-800 transition text-red-500">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                                    </a>
                                 </div>
                             </div>
-                        </div>
-                    <?php else: ?>
-                        <a href="/login" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">S'identifier</a>
-                    <?php endif; ?>
+                        <?php else: ?>
+                            <a href="/Cinetech/login" class="hover:text-red-600 transition">S'identifier</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
+
     <main>

@@ -1,4 +1,7 @@
-<?php require_once 'includes/header.php'; ?>
+<?php 
+$pageTitle = $movieDetails['title'] . ' - La Cinétech';
+require_once 'includes/header.php'; 
+?>
 
 <!-- Modal Trailer -->
 <div id="trailerModal" class="fixed inset-0 z-50 hidden">
@@ -17,79 +20,126 @@
 
 <!-- Hero Section -->
 <div class="relative min-h-screen">
-    <!-- Backdrop Image -->
+    <!-- Backdrop -->
     <div class="absolute inset-0">
-        <img src="https://image.tmdb.org/t/p/original<?= $movie['backdrop_path'] ?>" 
-             alt="<?= htmlspecialchars($movie['title']) ?>"
+        <img src="https://image.tmdb.org/t/p/original<?= $movieDetails['backdrop_path'] ?>" 
+             alt="" 
              class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
     </div>
 
     <!-- Content -->
-    <div class="relative z-10 container mx-auto px-4 pt-32">
+    <div class="relative container mx-auto px-4 pt-32 pb-16">
         <div class="flex flex-col md:flex-row gap-8">
             <!-- Poster -->
             <div class="w-64 flex-shrink-0">
-                <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" 
-                     alt="<?= htmlspecialchars($movie['title']) ?>"
-                     class="w-full rounded-lg shadow-lg">
+                <div class="relative group">
+                    <img src="https://image.tmdb.org/t/p/w500<?= $movieDetails['poster_path'] ?>" 
+                         alt="<?= htmlspecialchars($movieDetails['title']) ?>"
+                         class="w-full rounded-lg shadow-lg">
+                    
+                    <!-- Bouton Favoris -->
+                    <?php if (isset($_SESSION['user'])): ?>
+                    <button onclick="toggleFavorite(event, <?= $movieDetails['id'] ?>, 'movie')" 
+                            class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75
+                                   <?= $isFavorite ? 'active' : '' ?>">
+                        <i class="fas fa-heart text-xl"></i>
+                    </button>
+                    <?php endif; ?>
+                </div>
+
+                <?php if ($trailer): ?>
+                <button onclick="playTrailer('<?= $trailer['key'] ?>')"
+                        class="w-full mt-4 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition flex items-center justify-center gap-2">
+                    <i class="fas fa-play"></i>
+                    Bande annonce
+                </button>
+                <?php endif; ?>
             </div>
 
             <!-- Info -->
             <div class="flex-1">
-                <h1 class="text-4xl md:text-6xl font-bold mb-4">
-                    <?= htmlspecialchars($movie['title']) ?>
-                </h1>
+                <h1 class="text-4xl font-bold mb-2"><?= htmlspecialchars($movieDetails['title']) ?></h1>
+                
+                <?php if (!empty($movieDetails['tagline'])): ?>
+                <p class="text-xl text-gray-400 mb-4"><?= htmlspecialchars($movieDetails['tagline']) ?></p>
+                <?php endif; ?>
 
-                <div class="flex items-center space-x-4 mb-6">
-                    <span class="text-sm"><?= date('Y', strtotime($movie['release_date'])) ?></span>
-                    <span class="text-sm"><?= $movie['runtime'] ?> min</span>
+                <div class="flex items-center gap-4 mb-6">
                     <div class="flex items-center">
                         <i class="fas fa-star text-yellow-500 mr-1"></i>
-                        <span><?= number_format($movie['vote_average'], 1) ?></span>
+                        <span><?= number_format($movieDetails['vote_average'], 1) ?></span>
                     </div>
+                    <span><?= date('Y', strtotime($movieDetails['release_date'])) ?></span>
+                    <span><?= $movieDetails['runtime'] ?> min</span>
                 </div>
-
-                <div class="flex space-x-4 mb-8">
-                    <?php if (!empty($videos)): ?>
-                        <button onclick="playTrailer('<?= $videos[0]['key'] ?>')" 
-                                class="flex items-center bg-white text-black px-6 py-2 rounded hover:bg-opacity-80 transition">
-                            <i class="fas fa-play mr-2"></i> Bande annonce
-                        </button>
-                    <?php endif; ?>
-                    
-                    <button onclick="toggleFavorite(<?= $movie['id'] ?>)" 
-                            class="flex items-center bg-gray-600 bg-opacity-50 px-6 py-2 rounded hover:bg-opacity-70 transition">
-                        <i class="fas <?= $isFavorite ? 'fa-check' : 'fa-plus' ?> mr-2"></i>
-                        <?= $isFavorite ? 'Dans ma liste' : 'Ajouter à ma liste' ?>
-                    </button>
-                </div>
-
-                <p class="text-lg mb-8"><?= htmlspecialchars($movie['overview']) ?></p>
 
                 <!-- Genres -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <?php foreach ($movieDetails['genres'] as $genre): ?>
+                        <span class="px-3 py-1 bg-gray-800 rounded-full text-sm">
+                            <?= htmlspecialchars($genre['name']) ?>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Synopsis -->
                 <div class="mb-8">
-                    <h3 class="text-lg font-semibold mb-2">Genres</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <?php foreach ($movie['genres'] as $genre): ?>
-                            <span class="px-3 py-1 bg-gray-800 rounded-full text-sm">
-                                <?= htmlspecialchars($genre['name']) ?>
-                            </span>
+                    <h2 class="text-2xl font-bold mb-4">Synopsis</h2>
+                    <p class="text-gray-300"><?= nl2br(htmlspecialchars($movieDetails['overview'])) ?></p>
+                </div>
+
+                <!-- Casting -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4">Casting</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        <?php foreach ($cast as $actor): ?>
+                            <div class="text-center">
+                                <?php if ($actor['profile_path']): ?>
+                                    <img src="https://image.tmdb.org/t/p/w185<?= $actor['profile_path'] ?>" 
+                                         alt="<?= htmlspecialchars($actor['name']) ?>"
+                                         class="w-full rounded-lg mb-2">
+                                <?php endif; ?>
+                                <p class="font-semibold"><?= htmlspecialchars($actor['name']) ?></p>
+                                <p class="text-sm text-gray-400"><?= htmlspecialchars($actor['character']) ?></p>
+                            </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
 
-                <!-- Cast -->
+                <!-- Commentaires -->
                 <div class="mb-8">
-                    <h3 class="text-lg font-semibold mb-4">Casting principal</h3>
-                    <div class="flex overflow-x-auto space-x-4 pb-4">
-                        <?php foreach (array_slice($movie['credits']['cast'], 0, 6) as $actor): ?>
-                            <div class="flex-none w-32">
-                                <img src="https://image.tmdb.org/t/p/w200<?= $actor['profile_path'] ?>" 
-                                     alt="<?= htmlspecialchars($actor['name']) ?>"
-                                     class="w-full h-48 object-cover rounded-lg mb-2">
-                                <p class="text-sm font-semibold"><?= htmlspecialchars($actor['name']) ?></p>
-                                <p class="text-sm text-gray-400"><?= htmlspecialchars($actor['character']) ?></p>
+                    <h2 class="text-2xl font-bold mb-4">Commentaires</h2>
+                    
+                    <?php if (isset($_SESSION['user'])): ?>
+                        <form action="/Cinetech/movie/comment" method="POST" class="mb-6">
+                            <input type="hidden" name="movie_id" value="<?= $movieDetails['id'] ?>">
+                            <textarea name="comment" 
+                                      class="w-full p-4 bg-gray-800 rounded-lg resize-none mb-2"
+                                      rows="3"
+                                      placeholder="Ajouter un commentaire..."></textarea>
+                            <button type="submit" 
+                                    class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                                Publier
+                            </button>
+                        </form>
+                    <?php else: ?>
+                        <p class="mb-6">
+                            <a href="/Cinetech/login" class="text-red-600 hover:underline">Connectez-vous</a> 
+                            pour laisser un commentaire
+                        </p>
+                    <?php endif; ?>
+
+                    <div class="space-y-4">
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="bg-gray-800 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="font-semibold"><?= htmlspecialchars($comment['username']) ?></div>
+                                    <div class="text-sm text-gray-400">
+                                        <?= date('d/m/Y H:i', strtotime($comment['created_at'])) ?>
+                                    </div>
+                                </div>
+                                <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -98,27 +148,6 @@
         </div>
     </div>
 </div>
-
-<!-- Similar Movies -->
-<section class="py-12 bg-black">
-    <div class="container mx-auto px-4">
-        <h2 class="text-2xl font-bold mb-6">Films similaires</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <?php foreach (array_slice($similar, 0, 6) as $similarMovie): ?>
-                <a href="/movie/<?= $similarMovie['id'] ?>" class="block group">
-                    <div class="relative aspect-[2/3] rounded-lg overflow-hidden">
-                        <img src="https://image.tmdb.org/t/p/w500<?= $similarMovie['poster_path'] ?>" 
-                             alt="<?= htmlspecialchars($similarMovie['title']) ?>"
-                             class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
-                        <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity"></div>
-                    </div>
-                    <h3 class="mt-2 text-sm font-semibold">
-                        <?= htmlspecialchars($similarMovie['title']) ?>
-                    </h3>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </section>
 
 <script>
 function playTrailer(videoId) {
@@ -135,35 +164,7 @@ function closeTrailer() {
     modal.classList.add('hidden');
 }
 
-async function toggleFavorite(movieId) {
-    try {
-        const response = await fetch('/api/favorites/toggle', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ movie_id: movieId })
-        });
-        
-        const data = await response.json();
-        const button = event.target.closest('button');
-        const icon = button.querySelector('i');
-        
-        if (data.status === 'added') {
-            icon.classList.remove('fa-plus');
-            icon.classList.add('fa-check');
-            button.querySelector('span').textContent = 'Dans ma liste';
-        } else {
-            icon.classList.remove('fa-check');
-            icon.classList.add('fa-plus');
-            button.querySelector('span').textContent = 'Ajouter à ma liste';
-        }
-    } catch (error) {
-        console.error('Erreur:', error);
-    }
-}
-
-// Fermer le modal avec Escape
+// Fermer avec Escape
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeTrailer();
 });

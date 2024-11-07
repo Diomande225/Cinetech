@@ -1,0 +1,38 @@
+.favorite-btn {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.favorite-btn i {
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+.favorite-btn.active i {
+    color: #e50914;
+}
+
+.group:hover .favorite-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.favorite-btn:hover i {
+    transform: scale(1.2);
+}
+
+.favorite-btn.active {
+    opacity: 1;
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.2); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.favorite-btn.animating i {
+    animation: heartBeat 0.5s ease-in-out;
+} 

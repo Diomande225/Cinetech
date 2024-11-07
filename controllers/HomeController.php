@@ -2,34 +2,52 @@
 class HomeController {
     private $api_key = 'c21ac6ce8a090027847698c1f58d5a71';
 
-    private function fetchTMDBData($endpoint) {
+    public function getPopularContent() {
         try {
-            $url = "https://api.themoviedb.org/3/{$endpoint}&api_key={$this->api_key}&language=fr-FR";
-            $response = file_get_contents($url);
-            return json_decode($response, true);
+            // Récupérer les films tendances pour le banner
+            $trendingMovies = $this->fetchTMDBData('trending/movie/week');
+            $randomMovie = $trendingMovies['results'][array_rand($trendingMovies['results'])];
+            
+            // Récupérer les détails complets du film en vedette
+            $movieDetails = $this->fetchTMDBData("movie/{$randomMovie['id']}");
+            
+            // Récupérer les différentes catégories
+            $categories = [
+                'trending' => $this->fetchTMDBData('trending/all/day')['results'],
+                'popular_movies' => $this->fetchTMDBData('movie/popular')['results'],
+                'top_rated_movies' => $this->fetchTMDBData('movie/top_rated')['results'],
+                'upcoming_movies' => $this->fetchTMDBData('movie/upcoming')['results'],
+                'popular_tv' => $this->fetchTMDBData('tv/popular')['results'],
+                'top_rated_tv' => $this->fetchTMDBData('tv/top_rated')['results']
+            ];
+
+            return [
+                'movieDetails' => $movieDetails,
+                'categories' => $categories,
+                'success' => true
+            ];
+
         } catch (Exception $e) {
-            return ['results' => []];
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
         }
     }
 
-    public function index() {
-        // Récupérer un film populaire aléatoire pour le banner
-        $popularMovies = $this->fetchTMDBData('trending/movie/week?');
-        $randomIndex = array_rand($popularMovies['results']);
-        $featuredMovie = $popularMovies['results'][$randomIndex];
+    private function fetchTMDBData($endpoint) {
+        $url = "https://api.themoviedb.org/3/{$endpoint}?api_key={$this->api_key}&language=fr-FR";
+        $response = @file_get_contents($url);
         
-        // Récupérer les détails complets du film
-        $movieDetails = $this->fetchTMDBData("movie/{$featuredMovie['id']}?");
+        if ($response === false) {
+            throw new Exception('Impossible de récupérer les données de TMDB');
+        }
         
-        // Récupérer différentes catégories
-        $categories = [
-            'trending' => $this->fetchTMDBData('trending/all/day?'),
-            'popular_movies' => $this->fetchTMDBData('movie/popular?'),
-            'top_rated' => $this->fetchTMDBData('movie/top_rated?'),
-            'upcoming' => $this->fetchTMDBData('movie/upcoming?'),
-            'popular_tv' => $this->fetchTMDBData('tv/popular?')
-        ];
+        return json_decode($response, true);
+    }
 
-        require 'views/home.php';
+    // Fonction utilitaire pour formater les dates
+    private function formatDate($date) {
+        return date('d/m/Y', strtotime($date));
     }
 } 
