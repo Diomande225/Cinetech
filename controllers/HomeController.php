@@ -1,53 +1,74 @@
 <?php
+require_once 'classes/TMDBApi.php';
+require_once 'includes/helpers.php';
+
 class HomeController {
-    private $api_key = 'c21ac6ce8a090027847698c1f58d5a71';
+    private $tmdb;
 
-    public function getPopularContent() {
+    public function __construct() {
+        $this->tmdb = new TMDBApi();
+    }
+
+    public function index() {
         try {
-            // Récupérer les films tendances pour le banner
-            $trendingMovies = $this->fetchTMDBData('trending/movie/week');
-            $randomMovie = $trendingMovies['results'][array_rand($trendingMovies['results'])];
-            
-            // Récupérer les détails complets du film en vedette
-            $movieDetails = $this->fetchTMDBData("movie/{$randomMovie['id']}");
-            
-            // Récupérer les différentes catégories
-            $categories = [
-                'trending' => $this->fetchTMDBData('trending/all/day')['results'],
-                'popular_movies' => $this->fetchTMDBData('movie/popular')['results'],
-                'top_rated_movies' => $this->fetchTMDBData('movie/top_rated')['results'],
-                'upcoming_movies' => $this->fetchTMDBData('movie/upcoming')['results'],
-                'popular_tv' => $this->fetchTMDBData('tv/popular')['results'],
-                'top_rated_tv' => $this->fetchTMDBData('tv/top_rated')['results']
+            // Récupérer les contenus pour chaque section
+            $content = [
+                'trending' => $this->tmdb->getTrending('day')['results'],
+                'popular_movies' => $this->tmdb->getPopularMovies()['results'],
+                'popular_shows' => $this->tmdb->getPopularTVShows()['results'],
+                'top_rated_movies' => $this->tmdb->getTopRatedMovies()['results'],
+                'upcoming_movies' => $this->tmdb->getUpcomingMovies()['results'],
+                'airing_today' => $this->tmdb->getAiringTodayTVShows()['results']
             ];
 
-            return [
-                'movieDetails' => $movieDetails,
-                'categories' => $categories,
-                'success' => true
-            ];
+            // Sélectionner un film/série aléatoire pour le banner
+            $featured = $this->getRandomFeaturedContent($content['trending']);
 
+            require 'views/home.php';
         } catch (Exception $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage()
-            ];
+            error_log($e->getMessage());
+            require 'views/404.php';
         }
     }
 
-    private function fetchTMDBData($endpoint) {
-        $url = "https://api.themoviedb.org/3/{$endpoint}?api_key={$this->api_key}&language=fr-FR";
-        $response = @file_get_contents($url);
-        
-        if ($response === false) {
-            throw new Exception('Impossible de récupérer les données de TMDB');
+    private function getRandomFeaturedContent($items) {
+        if (empty($items)) {
+            return null;
         }
-        
-        return json_decode($response, true);
-    }
 
-    // Fonction utilitaire pour formater les dates
-    private function formatDate($date) {
-        return date('d/m/Y', strtotime($date));
+        $item = $items[array_rand($items)];
+        $mediaType = $item['media_type'] ?? 'movie';
+        
+        try {
+            // Récupérer les détails complets
+            if ($mediaType === 'movie') {
+                $details = $this->tmdb->getMovieDetails($item['id']);
+            } else {
+                $details = $this->tmdb->getTVShowDetails($item['id']);
+            }
+
+            // Récupérer la bande-annonce
+            $videos = $this->tmdb->get("/{$mediaType}/{$item['id']}/videos")['results'] ?? [];
+            $trailerKey = null;
+            
+            foreach ($videos as $video) {
+                if ($video['type'] === 'Trailer' && $video['site'] === 'YouTube') {
+                    $trailerKey = $video['key'];
+                    break;
+                }
+            }
+
+            return array_merge($details, [
+                'media_type' => $mediaType,
+                'trailer_key' => $trailerKey
+            ]);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return $item;
+        }
     }
+}
+
+class SomeOtherClass {
+    // SomeOtherClass methods and properties here
 } 

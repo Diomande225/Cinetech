@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+// Charger les helpers en premier
+require_once 'includes/helpers.php';
+
+// Puis les autres fichiers
 require_once 'config/database.php';
 require_once 'classes/TMDBApi.php';
 require_once 'controllers/MovieController.php';
@@ -8,7 +13,6 @@ require_once 'controllers/HomeController.php';
 require_once 'controllers/AuthController.php';
 require_once 'controllers/SearchController.php';
 require_once 'controllers/FavoritesController.php';
-require_once 'includes/helpers.php';
 
 // Récupérer l'URL demandée
 $uri = $_SERVER['REQUEST_URI'];
@@ -19,11 +23,24 @@ $uri = str_replace($basePath, '', $uri);
 
 // Système de routage
 try {
-    // Page d'accueil
-    if ($uri === '' || $uri === '/') {
+    // Route pour la page d'accueil
+    if ($uri === '/' || $uri === '') {
         $controller = new HomeController();
-        $content = $controller->getPopularContent();
-        require 'views/home.php';
+        $controller->index();
+        exit;
+    }
+
+    // Route pour les détails d'un film
+    if (preg_match('#^/movie/(\d+)$#', $uri, $matches)) {
+        $controller = new MovieController();
+        $controller->show($matches[1]);
+        exit;
+    }
+
+    // Route pour les détails d'une série
+    if (preg_match('#^/tv/(\d+)$#', $uri, $matches)) {
+        $controller = new TVShowController();
+        $controller->show($matches[1]);
         exit;
     }
 
@@ -34,22 +51,10 @@ try {
         exit;
     }
 
-    if (preg_match('#^/movie/(\d+)$#', $uri, $matches)) {
-        $controller = new MovieController();
-        $controller->show($matches[1]);
-        exit;
-    }
-
     // Routes pour les séries
     if ($uri === '/tv-shows') {
         $controller = new TVShowController();
         $controller->index();
-        exit;
-    }
-
-    if (preg_match('#^/tv/(\d+)$#', $uri, $matches)) {
-        $controller = new TVShowController();
-        $controller->show($matches[1]);
         exit;
     }
 

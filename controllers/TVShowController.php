@@ -28,7 +28,7 @@ class TVShowController {
 
     public function show($id) {
         try {
-            $show = $this->tmdb->getShowDetails($id);
+            $show = $this->tmdb->getTVShowDetails($id);
             $videos = $this->tmdb->getShowVideos($id)['results'];
             $similar = $this->tmdb->getSimilarShows($id)['results'];
             $comments = $this->getComments($id);
