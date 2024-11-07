@@ -78,24 +78,16 @@ require_once 'includes/header.php';
         <?php if (!empty($content['popular_movies'])): ?>
         <section class="mb-12">
             <h2 class="text-2xl font-bold mb-6">Films Populaires</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                 <?php foreach ($content['popular_movies'] as $movie): ?>
                     <div class="relative group">
-                        <a href="/movie/<?= $movie['id'] ?>">
-                            <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" 
-                                 alt="<?= htmlspecialchars($movie['title']) ?>"
-                                 class="rounded-lg transition duration-300 group-hover:scale-105">
-                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 rounded-lg">
-                                <div class="absolute bottom-0 p-4 w-full opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <h3 class="text-white font-semibold">
-                                        <?= htmlspecialchars($movie['title']) ?>
-                                    </h3>
-                                </div>
-                            </div>
-                        </a>
+                        <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" 
+                             alt="<?= htmlspecialchars($movie['title']) ?>"
+                             class="w-full h-auto rounded-lg">
+                        
                         <?php if (isset($_SESSION['user'])): ?>
                             <button onclick="toggleFavorite(event, <?= $movie['id'] ?>, 'movie')" 
-                                    class="absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
+                                    class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
                                 <i class="fas fa-heart <?= isFavorite($movie['id'], 'movie') ? 'text-red-600' : 'text-white' ?>"></i>
                             </button>
                         <?php endif; ?>
@@ -109,24 +101,16 @@ require_once 'includes/header.php';
         <?php if (!empty($content['popular_shows'])): ?>
         <section class="mb-12">
             <h2 class="text-2xl font-bold mb-6">Séries Populaires</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                 <?php foreach ($content['popular_shows'] as $show): ?>
                     <div class="relative group">
-                        <a href="/tv/<?= $show['id'] ?>">
-                            <img src="https://image.tmdb.org/t/p/w500<?= $show['poster_path'] ?>" 
-                                 alt="<?= htmlspecialchars($show['name']) ?>"
-                                 class="rounded-lg transition duration-300 group-hover:scale-105">
-                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 rounded-lg">
-                                <div class="absolute bottom-0 p-4 w-full opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <h3 class="text-white font-semibold">
-                                        <?= htmlspecialchars($show['name']) ?>
-                                    </h3>
-                                </div>
-                            </div>
-                        </a>
+                        <img src="https://image.tmdb.org/t/p/w500<?= $show['poster_path'] ?>" 
+                             alt="<?= htmlspecialchars($show['name']) ?>"
+                             class="w-full h-auto rounded-lg">
+                        
                         <?php if (isset($_SESSION['user'])): ?>
                             <button onclick="toggleFavorite(event, <?= $show['id'] ?>, 'tv')" 
-                                    class="absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
+                                    class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
                                 <i class="fas fa-heart <?= isFavorite($show['id'], 'tv') ? 'text-red-600' : 'text-white' ?>"></i>
                             </button>
                         <?php endif; ?>

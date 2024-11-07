@@ -2,6 +2,8 @@ async function toggleFavorite(event, mediaId, mediaType) {
     event.preventDefault();
     event.stopPropagation();
     
+    console.log('Toggle favorite:', { mediaId, mediaType }); // Debug
+    
     try {
         const response = await fetch('/Cinetech/api/favorites/toggle', {
             method: 'POST',
@@ -17,7 +19,7 @@ async function toggleFavorite(event, mediaId, mediaType) {
         const data = await response.json();
         
         if (data.success) {
-            const icon = event.currentTarget.querySelector('i');
+            const icon = event.currentTarget.querySelector('i.fa-heart');
             if (data.isFavorite) {
                 icon.classList.remove('text-white');
                 icon.classList.add('text-red-600');

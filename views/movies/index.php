@@ -16,11 +16,12 @@ require_once 'includes/header.php';
                              class="w-full h-auto transition-transform duration-300 group-hover:scale-105">
                         
                         <!-- Bouton Favoris -->
-                        <button onclick="toggleFavorite(event, <?= $movie['id'] ?>, 'movie')" 
-                                class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10
-                                       <?= isset($_SESSION['user']) && isInFavorites($movie['id'], 'movie') ? 'active' : '' ?>">
-                            <i class="fas fa-heart text-xl"></i>
-                        </button>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <button onclick="toggleFavorite(event, <?= $movie['id'] ?>, 'movie')" 
+                                    class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
+                                <i class="fas fa-heart <?= isFavorite($movie['id'], 'movie') ? 'text-red-600' : 'text-white' ?>"></i>
+                            </button>
+                        <?php endif; ?>
                         
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <div class="absolute bottom-0 p-4">
@@ -66,11 +67,12 @@ require_once 'includes/header.php';
                              class="w-full h-auto transition-transform duration-300 group-hover:scale-105">
                         
                         <!-- Bouton Favoris -->
-                        <button onclick="toggleFavorite(event, <?= $movie['id'] ?>, 'movie')" 
-                                class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10
-                                       <?= isset($_SESSION['user']) && isInFavorites($movie['id'], 'movie') ? 'active' : '' ?>">
-                            <i class="fas fa-heart text-xl"></i>
-                        </button>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <button onclick="toggleFavorite(event, <?= $movie['id'] ?>, 'movie')" 
+                                    class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
+                                <i class="fas fa-heart <?= isFavorite($movie['id'], 'movie') ? 'text-red-600' : 'text-white' ?>"></i>
+                            </button>
+                        <?php endif; ?>
                         
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <div class="absolute bottom-0 p-4">
@@ -99,11 +101,12 @@ require_once 'includes/header.php';
                              class="w-full h-auto transition-transform duration-300 group-hover:scale-105">
                         
                         <!-- Bouton Favoris -->
-                        <button onclick="toggleFavorite(event, <?= $movie['id'] ?>, 'movie')" 
-                                class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10
-                                       <?= isset($_SESSION['user']) && isInFavorites($movie['id'], 'movie') ? 'active' : '' ?>">
-                            <i class="fas fa-heart text-xl"></i>
-                        </button>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <button onclick="toggleFavorite(event, <?= $movie['id'] ?>, 'movie')" 
+                                    class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
+                                <i class="fas fa-heart <?= isFavorite($movie['id'], 'movie') ? 'text-red-600' : 'text-white' ?>"></i>
+                            </button>
+                        <?php endif; ?>
                         
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <div class="absolute bottom-0 p-4">

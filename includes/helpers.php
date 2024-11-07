@@ -61,6 +61,7 @@ function isFavorite($mediaId, $mediaType) {
         $stmt->execute([$_SESSION['user']['id'], $mediaId, $mediaType]);
         return $stmt->fetch() !== false;
     } catch (Exception $e) {
+        error_log($e->getMessage());
         return false;
     }
 } 

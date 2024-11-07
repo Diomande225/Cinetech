@@ -12,7 +12,8 @@ require_once 'classes/TMDBApi.php';
 require_once 'includes/helpers.php';
 require_once 'controllers/HomeController.php';
 require_once 'controllers/AuthController.php';
-require_once 'controllers/ApiController.php';
+//require_once 'controllers/ApiController.php';//
+require_once 'controllers/FavoritesController.php';
 
 // Récupérer l'URL demandée
 $request_uri = $_SERVER['REQUEST_URI'];
@@ -49,9 +50,14 @@ try {
             }
             break;
             
+        case '/favorites':
+            $favorites = new FavoritesController();
+            $favorites->index();
+            break;
+            
         case '/api/favorites/toggle':
-            $api = new ApiController();
-            $api->toggleFavorite();
+            $favorites = new FavoritesController();
+            $favorites->toggle();
             break;
             
         default:
