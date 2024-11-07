@@ -1,12 +1,6 @@
-async function toggleFavorite(event, id, type) {
+async function toggleFavorite(event, mediaId, mediaType) {
     event.preventDefault();
-    
-    if (!isAuthenticated) {
-        window.location.href = '/Cinetech/login';
-        return;
-    }
-    
-    const button = event.currentTarget;
+    event.stopPropagation();
     
     try {
         const response = await fetch('/Cinetech/api/favorites/toggle', {
@@ -14,20 +8,23 @@ async function toggleFavorite(event, id, type) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id, type })
+            body: JSON.stringify({ 
+                media_id: mediaId, 
+                media_type: mediaType 
+            })
         });
-        
+
         const data = await response.json();
         
         if (data.success) {
-            button.classList.toggle('active');
-            button.classList.add('animating');
-            
-            setTimeout(() => {
-                button.classList.remove('animating');
-            }, 500);
-            
-            updateFavoritesCount(data.count);
+            const icon = event.currentTarget.querySelector('i');
+            if (data.isFavorite) {
+                icon.classList.remove('text-white');
+                icon.classList.add('text-red-600');
+            } else {
+                icon.classList.remove('text-red-600');
+                icon.classList.add('text-white');
+            }
         }
     } catch (error) {
         console.error('Erreur:', error);

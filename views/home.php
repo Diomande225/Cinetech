@@ -62,6 +62,12 @@ require_once 'includes/header.php';
                                 </div>
                             </div>
                         </a>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <button onclick="toggleFavorite(event, <?= $item['id'] ?>, '<?= $item['media_type'] ?>')" 
+                                    class="absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
+                                <i class="fas fa-heart <?= isFavorite($item['id'], $item['media_type']) ? 'text-red-600' : 'text-white' ?>"></i>
+                            </button>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -87,6 +93,12 @@ require_once 'includes/header.php';
                                 </div>
                             </div>
                         </a>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <button onclick="toggleFavorite(event, <?= $movie['id'] ?>, 'movie')" 
+                                    class="absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
+                                <i class="fas fa-heart <?= isFavorite($movie['id'], 'movie') ? 'text-red-600' : 'text-white' ?>"></i>
+                            </button>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -112,6 +124,12 @@ require_once 'includes/header.php';
                                 </div>
                             </div>
                         </a>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <button onclick="toggleFavorite(event, <?= $show['id'] ?>, 'tv')" 
+                                    class="absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
+                                <i class="fas fa-heart <?= isFavorite($show['id'], 'tv') ? 'text-red-600' : 'text-white' ?>"></i>
+                            </button>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>

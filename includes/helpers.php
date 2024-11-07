@@ -45,4 +45,22 @@ function isInFavorites($contentId, $contentType) {
     $stmt = $db->prepare("SELECT id FROM favorites WHERE user_id = ? AND content_id = ? AND content_type = ?");
     $stmt->execute([$_SESSION['user']['id'], $contentId, $contentType]);
     return $stmt->fetch() !== false;
+}
+
+function isFavorite($mediaId, $mediaType) {
+    if (!isset($_SESSION['user'])) {
+        return false;
+    }
+    
+    try {
+        $db = Database::getInstance();
+        $stmt = $db->prepare(
+            "SELECT 1 FROM favorites 
+            WHERE user_id = ? AND media_id = ? AND media_type = ?"
+        );
+        $stmt->execute([$_SESSION['user']['id'], $mediaId, $mediaType]);
+        return $stmt->fetch() !== false;
+    } catch (Exception $e) {
+        return false;
+    }
 } 
