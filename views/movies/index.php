@@ -15,10 +15,17 @@ require_once 'includes/header.php';
                              alt="<?= htmlspecialchars($movie['title']) ?>"
                              class="w-full h-auto transition-transform duration-300 group-hover:scale-105">
                         
-                        <!-- Bouton Favoris -->
+                        <!-- Ajoutez ceci temporairement pour déboguer -->
                         <?php if (isset($_SESSION['user'])): ?>
-                            <button onclick="toggleFavorite(event, <?= $movie['id'] ?>, 'movie')" 
-                                    class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10">
+                            <pre><?php var_dump($_SESSION['user']); ?></pre>
+                        <?php endif; ?>
+                        
+                        <!-- Le bouton -->
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <button 
+                                class="favorite-btn absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center transition-all hover:bg-black/75 z-10"
+                                data-media-id="<?= $movie['id'] ?>"
+                                data-media-type="movie">
                                 <i class="fas fa-heart <?= isFavorite($movie['id'], 'movie') ? 'text-red-600' : 'text-white' ?>"></i>
                             </button>
                         <?php endif; ?>

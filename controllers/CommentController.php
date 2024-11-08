@@ -7,9 +7,10 @@ class CommentController {
     }
 
     public function add() {
-        if (!isAuthenticated()) {
+        if (!isset($_SESSION['user'])) {
             http_response_code(401);
-            return json_encode(['error' => 'Non autorisé']);
+            echo json_encode(['error' => 'Non autorisé']);
+            exit;
         }
 
         $contentId = $_POST['content_id'] ?? null;

@@ -79,4 +79,15 @@ class MediaService {
 
         return $stmt->fetchColumn();
     }
+
+    public function getCachedData($endpoint, $params = []) {
+        $cacheKey = md5($endpoint . serialize($params));
+        $cachedData = $this->getFromCache($cacheKey);
+        if ($cachedData) {
+            return $cachedData;
+        }
+        $data = $this->tmdb->get($endpoint, $params);
+        $this->saveToCache($cacheKey, $data);
+        return $data;
+    }
 } 

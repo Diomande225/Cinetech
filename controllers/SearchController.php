@@ -8,6 +8,11 @@ class SearchController {
 
     public function index() {
         $query = $_GET['q'] ?? '';
+        if (empty($query)) {
+            $_SESSION['errors'] = ["La requête de recherche ne peut pas être vide"];
+            header('Location: /');
+            exit;
+        }
         $page = $_GET['page'] ?? 1;
         
         $results = [];

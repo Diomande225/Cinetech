@@ -55,9 +55,15 @@ try {
             $favorites->index();
             break;
             
-        case '/api/favorites/toggle':
+        case '/Cinetech/favorites':
             $favorites = new FavoritesController();
-            $favorites->toggle();
+            $favorites->index();
+            break;
+            
+        case '/Cinetech/api/favorites/toggle':
+            $favoritesController = new FavoritesController();
+            $favoritesController->toggle();
+            exit;
             break;
             
         default:

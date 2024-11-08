@@ -121,23 +121,33 @@ require_once 'includes/header.php';
 
 <!-- Ajoutez ce JavaScript à la fin du fichier -->
 <script>
-async function toggleFavorite(movieId) {
+async function toggleFavorite(event, movieId) {
+    event.preventDefault();
+    event.stopPropagation();
+    
     try {
-        const response = await fetch('/movie/favorite', {
+        const response = await fetch('/Cinetech/api/favorites/toggle', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ movie_id: movieId })
+            body: JSON.stringify({ 
+                media_id: movieId, 
+                media_type: 'movie' 
+            })
         });
-        
+
         const data = await response.json();
-        const button = document.querySelector('.favorite-btn');
         
-        if (data.status === 'added') {
-            button.classList.add('active');
-        } else {
-            button.classList.remove('active');
+        if (data.success) {
+            const icon = document.querySelector('.favorite-btn i');
+            if (data.isFavorite) {
+                icon.classList.remove('text-white');
+                icon.classList.add('text-red-600');
+            } else {
+                icon.classList.remove('text-red-600');
+                icon.classList.add('text-white');
+            }
         }
     } catch (error) {
         console.error('Erreur:', error);

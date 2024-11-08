@@ -55,11 +55,11 @@ function isFavorite($mediaId, $mediaType) {
     try {
         $db = Database::getInstance();
         $stmt = $db->prepare(
-            "SELECT 1 FROM favorites 
+            "SELECT COUNT(*) FROM favorites 
             WHERE user_id = ? AND media_id = ? AND media_type = ?"
         );
         $stmt->execute([$_SESSION['user']['id'], $mediaId, $mediaType]);
-        return $stmt->fetch() !== false;
+        return $stmt->fetchColumn() > 0;
     } catch (Exception $e) {
         error_log($e->getMessage());
         return false;
