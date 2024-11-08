@@ -4,24 +4,21 @@ require_once 'config/database.php';
 
 class TVShowController {
     private $tmdb;
-    private $db;
 
     public function __construct() {
-        global $db;
-        $this->db = $db;
         $this->tmdb = new TMDBApi();
     }
 
     public function index() {
         try {
-            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-            $shows = $this->tmdb->getPopularShows($page);
-            $topRated = $this->tmdb->get('/tv/top_rated')['results'];
-            $airingToday = $this->tmdb->get('/tv/airing_today')['results'];
-            $onTheAir = $this->tmdb->get('/tv/on_the_air')['results'];
-            
+            $shows = [
+                'popular' => $this->tmdb->getPopularTVShows(),
+                'top_rated' => $this->tmdb->getTopRatedTVShows(),
+                'airing_today' => $this->tmdb->getAiringTodayTVShows()
+            ];
             require 'views/tv-shows/index.php';
         } catch (Exception $e) {
+            error_log($e->getMessage());
             require 'views/404.php';
         }
     }

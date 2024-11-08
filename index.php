@@ -12,8 +12,8 @@ require_once 'classes/TMDBApi.php';
 require_once 'includes/helpers.php';
 require_once 'controllers/HomeController.php';
 require_once 'controllers/AuthController.php';
-//require_once 'controllers/ApiController.php';//
-require_once 'controllers/FavoritesController.php';
+require_once 'controllers/MovieController.php';
+require_once 'controllers/TVShowController.php';
 
 // Récupérer l'URL demandée
 $request_uri = $_SERVER['REQUEST_URI'];
@@ -34,44 +34,21 @@ try {
             $home->index();
             break;
             
-        case '/register':
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $auth->register();
-            } else {
-                $auth->showRegisterForm();
-            }
+        case '/movies':
+            $movies = new MovieController();
+            $movies->index();
             break;
             
-        case '/login':
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $auth->login();
-            } else {
-                $auth->showLoginForm();
-            }
+        case '/tv-shows':
+            $tvShows = new TVShowController();
+            $tvShows->index();
             break;
             
-        case '/favorites':
-            $favorites = new FavoritesController();
-            $favorites->index();
-            break;
-            
-        case '/Cinetech/favorites':
-            $favorites = new FavoritesController();
-            $favorites->index();
-            break;
-            
-        case '/Cinetech/api/favorites/toggle':
-            $favoritesController = new FavoritesController();
-            $favoritesController->toggle();
-            exit;
-            break;
-            
-        default:
-            require 'views/404.php';
-            break;
+        // Ajoutez d'autres routes ici
     }
 } catch (Exception $e) {
     error_log($e->getMessage());
     require 'views/404.php';
 }
 ?>
+&   

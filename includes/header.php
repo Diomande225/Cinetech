@@ -48,6 +48,7 @@
         }
     }
     </script>
+   
 </head>
 <body class="bg-black text-white min-h-screen">
     <header>
@@ -105,5 +106,5 @@
             </div>
         </nav>
     </header>
-
+    <script src="/Cinetech/public/js/main.js" defer></script>
     <main>

@@ -8,6 +8,15 @@ class MovieController {
         $this->tmdb = new TMDBApi();
     }
 
+    public function index() {
+        $movies = [
+            'popular' => $this->tmdb->getPopularMovies(),
+            'top_rated' => $this->tmdb->getTopRatedMovies(),
+            'upcoming' => $this->tmdb->getUpcomingMovies()
+        ];
+        require 'views/movies/index.php';
+    }
+
     public function show($id) {
         try {
             // Récupérer les détails du film
