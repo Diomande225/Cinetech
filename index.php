@@ -24,6 +24,19 @@ $path = parse_url($path, PHP_URL_PATH);
 // Debug
 error_log("Requested Path: " . $path);
 
+// Routes dynamiques pour les détails des films et séries
+if (preg_match('#^/movie/(\d+)$#', $path, $matches)) {
+    require_once 'controllers/MovieController.php';
+    $controller = new MovieController();
+    return $controller->show($matches[1]);
+}
+
+if (preg_match('#^/tv-show/(\d+)$#', $path, $matches)) {
+    require_once 'controllers/TVShowController.php';
+    $controller = new TVShowController();
+    return $controller->show($matches[1]);
+}
+
 // Routes
 try {
     $auth = new AuthController();

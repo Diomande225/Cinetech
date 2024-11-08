@@ -4,9 +4,11 @@ require_once 'config/database.php';
 
 class TVShowController {
     private $tmdb;
+    private $db;
 
     public function __construct() {
         $this->tmdb = new TMDBApi();
+        $this->db = $db;
     }
 
     public function index() {
@@ -26,14 +28,11 @@ class TVShowController {
     public function show($id) {
         try {
             $show = $this->tmdb->getTVShowDetails($id);
-            $videos = $this->tmdb->getShowVideos($id)['results'];
-            $similar = $this->tmdb->getSimilarShows($id)['results'];
-            $comments = $this->getComments($id);
-            $userRating = $this->getUserRating($id);
-            $isFavorite = $this->isInFavorites($id);
-
-            require 'views/tv-shows/show.php';
+            $trailer = $this->tmdb->getTVShowTrailer($id);
+            $credits = $this->tmdb->getTVShowCredits($id);
+            require 'views/tv-shows/details.php';
         } catch (Exception $e) {
+            error_log($e->getMessage());
             require 'views/404.php';
         }
     }

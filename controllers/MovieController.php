@@ -19,26 +19,11 @@ class MovieController {
 
     public function show($id) {
         try {
-            // Récupérer les détails du film
             $movie = $this->tmdb->getMovieDetails($id);
-            
-            // Récupérer la bande-annonce
-            $videos = $this->tmdb->getMovieVideos($id);
-            $trailer = null;
-            
-            if (!empty($videos['results'])) {
-                foreach ($videos['results'] as $video) {
-                    if ($video['type'] === 'Trailer' && $video['site'] === 'YouTube') {
-                        $trailer = $video;
-                        break;
-                    }
-                }
-            }
-
-            // Charger la vue
-            require 'views/movies/show.php';
+            $trailer = $this->tmdb->getMovieTrailer($id);
+            $credits = $this->tmdb->getMovieCredits($id);
+            require 'views/movies/details.php';
         } catch (Exception $e) {
-            // Log l'erreur
             error_log($e->getMessage());
             require 'views/404.php';
         }
