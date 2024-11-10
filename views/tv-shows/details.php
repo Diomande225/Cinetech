@@ -76,4 +76,20 @@ require_once 'includes/header.php';
     </div>
 </div>
 
+<script>
+function playTrailer(key) {
+    const modal = document.getElementById('trailerModal');
+    const frame = document.getElementById('trailerFrame');
+    frame.src = `https://www.youtube.com/embed/${key}?autoplay=1`;
+    modal.classList.remove('hidden');
+}
+
+function closeTrailer() {
+    const modal = document.getElementById('trailerModal');
+    const frame = document.getElementById('trailerFrame');
+    frame.src = '';
+    modal.classList.add('hidden');
+}
+</script>
+
 <?php require_once 'includes/footer.php'; ?> 
