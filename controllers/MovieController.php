@@ -19,12 +19,14 @@ class MovieController {
 
     public function show($id) {
         try {
+            error_log("Fetching details for movie ID: " . $id);
             $movie = $this->tmdb->getMovieDetails($id);
+            error_log("Movie details: " . print_r($movie, true));
             $trailer = $this->tmdb->getMovieTrailer($id);
             $credits = $this->tmdb->getMovieCredits($id);
             require 'views/movies/details.php';
         } catch (Exception $e) {
-            error_log($e->getMessage());
+            error_log("Error fetching movie details: " . $e->getMessage());
             require 'views/404.php';
         }
     }
