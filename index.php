@@ -27,12 +27,13 @@ $path = parse_url($path, PHP_URL_PATH);
 // Debug
 error_log("Requested Path: " . $path);
 
-// Routes dynamiques pour les détails des films et séries
+// Routes dynamiques pour les détails des films
 if (preg_match('#^/movie/(\d+)$#', $path, $matches)) {
     $controller = new MovieController();
     return $controller->show($matches[1]);
 }
 
+// Routes dynamiques pour les détails des séries
 if (preg_match('#^/tv-show/(\d+)$#', $path, $matches)) {
     $controller = new TVShowController();
     return $controller->show($matches[1]);
@@ -89,7 +90,7 @@ try {
             break;
             
         case '/favorites':
-            $favorites = new FavoriteController();
+            $favorites = new FavoritesController();
             $favorites->index();
             break;
             
