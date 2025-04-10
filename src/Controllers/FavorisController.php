@@ -70,7 +70,6 @@ class FavorisController {
 
         try {
             $data = json_decode(file_get_contents('php://input'), true);
-            error_log('Received data: ' . print_r($data, true));
             
             if (!$data) {
                 throw new \Exception('Données invalides');
@@ -79,25 +78,25 @@ class FavorisController {
             $itemId = $data['item_id'] ?? null;
             $mediaType = $data['media_type'] ?? null;
 
-            error_log("ItemID: $itemId, MediaType: $mediaType");
-
             if (!$itemId || !$mediaType) {
                 throw new \Exception('ID ou type de média manquant');
             }
 
-            if (isset($_SESSION['user_id'])) {
-                $userId = $_SESSION['user_id'];
-                error_log("UserID: $userId");
-                
-                if (!$this->favorisModel->exists($userId, $itemId, $mediaType)) {
-                    $this->favorisModel->addFavori($userId, $itemId, $mediaType);
-                    echo json_encode(['status' => 'success', 'message' => 'Favori ajouté avec succès']);
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Ce favori existe déjà']);
-                }
-            } else {
+            if (!isset($_SESSION['user_id'])) {
                 echo json_encode(['status' => 'guest', 'message' => 'Utilisateur non connecté']);
+                return;
             }
+
+            $userId = $_SESSION['user_id'];
+            
+            if ($this->favorisModel->exists($userId, $itemId, $mediaType)) {
+                echo json_encode(['status' => 'error', 'message' => 'Ce favori existe déjà']);
+                return;
+            }
+
+            $this->favorisModel->addFavori($userId, $itemId, $mediaType);
+            echo json_encode(['status' => 'success', 'message' => 'Favori ajouté avec succès']);
+
         } catch (\Exception $e) {
             error_log('Error in addFavori: ' . $e->getMessage());
             error_log('Stack trace: ' . $e->getTraceAsString());

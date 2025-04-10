@@ -43,7 +43,7 @@
     </div>
 </footer>
 <!-- Inclusion du fichier favoris.js -->
-<script src="/public/js/favoris.js"></script>
+<script src="/Cinetech/js/favoris.js"></script>
 
 </body>
 </html>

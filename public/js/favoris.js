@@ -27,20 +27,26 @@ function addFavori(itemId, mediaType, button) {
             media_type: mediaType
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         if (data.status === 'success') {
             button.classList.add('active');
             showNotification('Favori ajouté avec succès', 'success');
         } else if (data.status === 'guest') {
             window.location.href = '/Cinetech/login';
         } else {
-            showNotification(data.message, 'error');
+            showNotification(data.message || 'Une erreur est survenue', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Une erreur est survenue', 'error');
+        showNotification('Une erreur est survenue lors de l\'ajout aux favoris', 'error');
     });
 }
 
@@ -55,20 +61,26 @@ function removeFavori(itemId, mediaType, button) {
             media_type: mediaType
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         if (data.status === 'success') {
             button.classList.remove('active');
             showNotification('Favori supprimé avec succès', 'success');
         } else if (data.status === 'guest') {
             window.location.href = '/Cinetech/login';
         } else {
-            showNotification(data.message, 'error');
+            showNotification(data.message || 'Une erreur est survenue', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Une erreur est survenue', 'error');
+        showNotification('Une erreur est survenue lors de la suppression du favori', 'error');
     });
 }
 

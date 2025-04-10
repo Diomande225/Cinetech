@@ -15,6 +15,8 @@ class Router {
         error_log("Router::dispatch() called with URL: " . $url);
         error_log("Available routes: " . print_r(array_keys($this->routes), true));
         
+        // Supprimer le préfixe /Cinetech si présent
+        $url = str_replace('/Cinetech', '', $url);
         $url = trim($url, '/');
         
         // Si l'URL est vide, rediriger vers la page d'accueil
