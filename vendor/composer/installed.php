@@ -1,19 +1,19 @@
 <?php return array(
     'root' => array(
-        'name' => 'your-name/cinetech',
+        'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '8494016cabac161243d7a73af5e4a26c215b0c71',
+        'reference' => '0fd6e7a9952dd9a1519cd8f9879070515e9587bc',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'your-name/cinetech' => array(
+        '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '8494016cabac161243d7a73af5e4a26c215b0c71',
+            'reference' => '0fd6e7a9952dd9a1519cd8f9879070515e9587bc',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
