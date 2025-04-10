@@ -32,8 +32,8 @@ $router->add('actor/:id', DetailController::class, 'actor');
 $router->add('search/autocomplete', SearchController::class, 'autocomplete');
 
 // Routes pour les favoris
-$router->add('add-favori', FavorisController::class, 'addFavori');
-$router->add('remove-favori', FavorisController::class, 'removeFavori');
+$router->add('favoris/add', FavorisController::class, 'addFavori');
+$router->add('favoris/remove', FavorisController::class, 'removeFavori');
 
 // Routes pour les commentaires
 $router->add('comments/:itemType/:itemId', CommentController::class, 'show');

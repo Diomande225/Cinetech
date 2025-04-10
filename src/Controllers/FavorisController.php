@@ -120,15 +120,16 @@ class FavorisController {
             }
 
             $itemId = $data['item_id'] ?? null;
+            $mediaType = $data['media_type'] ?? null;
 
-            if (!$itemId) {
-                throw new \Exception('ID manquant');
+            if (!$itemId || !$mediaType) {
+                throw new \Exception('ID ou type de média manquant');
             }
 
             if (isset($_SESSION['user_id'])) {
                 $userId = $_SESSION['user_id'];
-                if ($this->favorisModel->exists($userId, $itemId, $data['media_type'])) {
-                    $this->favorisModel->removeFavori($userId, $itemId);
+                if ($this->favorisModel->exists($userId, $itemId, $mediaType)) {
+                    $this->favorisModel->removeFavori($userId, $itemId, $mediaType);
                     echo json_encode(['status' => 'success', 'message' => 'Favori supprimé avec succès']);
                 } else {
                     echo json_encode(['status' => 'error', 'message' => "Le favori n'existe pas"]);

@@ -1,0 +1,28 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{ media.title }} - Cinetech{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row">
+        <div class="md:w-1/3">
+            <img src="{{ media.poster_path }}" alt="{{ media.title }}" class="w-full rounded-lg shadow-lg">
+        </div>
+        <div class="md:w-2/3 md:pl-8">
+            <h1 class="text-3xl font-bold text-white mb-4">{{ media.title }}</h1>
+            <div class="flex items-center mb-4">
+                <span class="text-yellow-400 mr-2">{{ media.vote_average }}/10</span>
+                <span class="text-gray-400">{{ media.release_date }}</span>
+            </div>
+            <p class="text-gray-300 mb-6">{{ media.overview }}</p>
+            <button class="favori-button {% if isFavori %}active{% endif %}" data-item-id="{{ media.id }}" data-media-type="{{ media.media_type }}">
+                <i class="fas fa-heart"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/Cinetech/js/favoris.js"></script>
+{% endblock %} 

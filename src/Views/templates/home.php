@@ -25,7 +25,7 @@
                         <h3 class="text-lg font-semibold text-white truncate"><?= htmlspecialchars($item['title'] ?? $item['name']) ?></h3>
                         <p class="text-sm text-gray-400"><?= substr($item['release_date'] ?? $item['first_air_date'], 0, 4) ?></p>
                         <a href="/Cinetech/detail/<?= $item['media_type'] ?>/<?= $item['id'] ?>" class="mt-2 text-red-600 hover:underline text-sm">Voir Détails</a>
-                        <button class="favorite-button mt-2 text-sm flex items-center" data-item-id="<?= $item['id'] ?>" data-media-type="<?= $item['media_type'] ?>">
+                        <button class="favori-button mt-2 text-sm flex items-center" data-item-id="<?= $item['id'] ?>" data-media-type="<?= $item['media_type'] ?>">
                             <i class="<?= in_array($item['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                         </button>
                     </div>
@@ -45,7 +45,7 @@
                         <h3 class="text-lg font-semibold text-white truncate"><?= htmlspecialchars($movie['title']) ?></h3>
                         <p class="text-sm text-gray-400"><?= substr($movie['release_date'], 0, 4) ?></p>
                         <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>" class="mt-2 text-red-600 hover:underline text-sm">Voir Détails</a>
-                        <button class="favorite-button mt-2 text-sm flex items-center" data-item-id="<?= $movie['id'] ?>" data-media-type="movie">
+                        <button class="favori-button mt-2 text-sm flex items-center" data-item-id="<?= $movie['id'] ?>" data-media-type="movie">
                             <i class="<?= in_array($movie['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                         </button>
                     </div>
@@ -65,7 +65,7 @@
                         <h3 class="text-lg font-semibold text-white truncate"><?= htmlspecialchars($series['name']) ?></h3>
                         <p class="text-sm text-gray-400"><?= substr($series['first_air_date'], 0, 4) ?></p>
                         <a href="/Cinetech/detail/tv/<?= $series['id'] ?>" class="mt-2 text-red-600 hover:underline text-sm">Voir Détails</a>
-                        <button class="favorite-button mt-2 text-sm flex items-center" data-item-id="<?= $series['id'] ?>" data-media-type="tv">
+                        <button class="favori-button mt-2 text-sm flex items-center" data-item-id="<?= $series['id'] ?>" data-media-type="tv">
                             <i class="<?= in_array($series['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                         </button>
                     </div>

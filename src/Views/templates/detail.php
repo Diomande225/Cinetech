@@ -14,6 +14,12 @@
                 <p class="mb-2"><strong>Nombre de saisons:</strong> <?= $details['number_of_seasons'] ?></p>
                 <p class="mb-2"><strong>Nombre d'épisodes:</strong> <?= $details['number_of_episodes'] ?></p>
             <?php endif; ?>
+            
+            <button class="favori-button <?= $isFavori ? 'active' : '' ?>" 
+                    data-item-id="<?= $id ?>" 
+                    data-media-type="<?= $mediaType ?>">
+                <i class="fas fa-heart"></i>
+            </button>
         </div>
     </div>
 
@@ -34,30 +40,28 @@
     </div>
 
     <!-- Bande-annonce -->
-<?php if (!empty($details['videos']['results'])): ?>
-    <div class="mt-8">
-        <h2 class="text-2xl font-bold mb-4">Bande-annonce</h2>
-        <?php
-        $trailer = array_filter($details['videos']['results'], function($video) {
-            return $video['type'] === 'Trailer' && $video['site'] === 'YouTube';
-        });
-        $trailer = reset($trailer);
-        if ($trailer):
-        ?>
-            <div class="relative mx-auto" style="max-width: 800px; padding-top: 50%; /* Aspect ratio 16:8 */">
-                <iframe 
-                    src="https://www.youtube.com/embed/<?= $trailer['key'] ?>" 
-                    frameborder="0" 
-                    allow="autoplay; encrypted-media" 
-                    allowfullscreen 
-                    class="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg">
-                </iframe>
-            </div>
-        <?php else: ?>
-            <p>Aucune bande-annonce disponible.</p>
-        <?php endif; ?>
-    </div>
-<?php endif; ?>
+    <?php if (!empty($details['videos']['results'])): ?>
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">Bande-annonce</h2>
+            <?php
+            $trailer = array_filter($details['videos']['results'], function($video) {
+                return $video['type'] === 'Trailer' && $video['site'] === 'YouTube';
+            });
+            $trailer = reset($trailer);
+            if ($trailer):
+            ?>
+                <div class="relative mx-auto" style="max-width: 800px; padding-top: 50%; /* Aspect ratio 16:8 */">
+                    <iframe 
+                        src="https://www.youtube.com/embed/<?= $trailer['key'] ?>" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen
+                        class="absolute top-0 left-0 w-full h-full"
+                    ></iframe>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
 
 <?php
 // Ajoutez ceci au début du fichier
@@ -77,3 +81,5 @@ error_log("details['id']: " . ($details['id'] ?? 'non défini'));
 <?php endif; ?>
 
 </main>
+
+<script src="/Cinetech/js/favoris.js"></script>

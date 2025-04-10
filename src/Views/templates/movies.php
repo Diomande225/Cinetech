@@ -43,7 +43,7 @@
                     <p class="text-gray-400 text-sm mb-2"><?= substr($movie['overview'], 0, 100) ?>...</p>
                     <div class="flex justify-between items-center mt-4">
                         <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
-                        <button class="favorite-button text-sm flex items-center" data-item-id="<?= $movie['id'] ?>" data-media-type="movie">
+                        <button class="favori-button text-sm flex items-center" data-item-id="<?= $movie['id'] ?>" data-media-type="movie">
                             <i class="<?= in_array($movie['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                         </button>
                     </div>
@@ -52,3 +52,5 @@
         <?php endforeach; ?>
     </div>
 </main>
+
+<script src="/Cinetech/js/favoris.js"></script>

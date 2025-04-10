@@ -13,9 +13,9 @@ class FavorisModel {
         $stmt->execute([$userId, $itemId, $mediaType]);
     }
 
-    public function removeFavori($userId, $itemId) {
-        $stmt = $this->db->prepare("DELETE FROM favorites WHERE user_id = ? AND item_id = ?");
-        $stmt->execute([$userId, $itemId]);
+    public function removeFavori($userId, $itemId, $mediaType) {
+        $stmt = $this->db->prepare("DELETE FROM favorites WHERE user_id = ? AND item_id = ? AND media_type = ?");
+        $stmt->execute([$userId, $itemId, $mediaType]);
     }
 
     public function getFavoris($userId) {

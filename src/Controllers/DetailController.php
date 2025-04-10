@@ -3,12 +3,17 @@ namespace App\Controllers;
 
 use App\Views\View;
 use App\Services\TMDBApi;
+use App\Models\FavorisModel;
+use App\Database\Connection;
 
 class DetailController {
     private $tmdbApi;
+    private $favorisModel;
 
     public function __construct() {
         $this->tmdbApi = new TMDBApi();
+        $db = Connection::getInstance();
+        $this->favorisModel = new FavorisModel($db);
     }
 
     public function show($mediaType, $id) {
@@ -25,15 +30,17 @@ class DetailController {
             exit;
         }
 
+        $isFavori = false;
+        if (isset($_SESSION['user_id'])) {
+            $isFavori = $this->favorisModel->exists($_SESSION['user_id'], $id, $mediaType);
+        }
+
         $view = new View();
         $view->render('detail', [
             'title' => $details['title'] ?? $details['name'],
             'details' => $details,
             'mediaType' => $mediaType,
-            'item' => [
-                'id' => $id,
-                'media_type' => $mediaType
-            ]
+            'isFavori' => $isFavori
         ]);
     }
 
