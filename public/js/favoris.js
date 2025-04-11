@@ -1,12 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing favori buttons...');
     const favoriButtons = document.querySelectorAll('.favori-button');
+    console.log('Found favori buttons:', favoriButtons.length);
     
     favoriButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        console.log('Setting up button:', button);
+        console.log('Button data:', {
+            itemId: button.dataset.itemId,
+            mediaType: button.dataset.mediaType,
+            isActive: button.classList.contains('active')
+        });
+        
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             const itemId = this.dataset.itemId;
             const mediaType = this.dataset.mediaType;
             const isFavori = this.classList.contains('active');
             const heartIcon = this.querySelector('i');
+            
+            console.log('Button clicked:', {
+                itemId,
+                mediaType,
+                isFavori,
+                classList: this.classList.toString(),
+                button: this
+            });
             
             if (isFavori) {
                 removeFavori(itemId, mediaType, this, heartIcon);
@@ -18,6 +38,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function addFavori(itemId, mediaType, button, heartIcon) {
+    console.log('Adding favori:', {
+        itemId,
+        mediaType,
+        buttonClasses: button.classList.toString()
+    });
+
     fetch('/Cinetech/favoris/add', {
         method: 'POST',
         headers: {
@@ -29,13 +55,14 @@ function addFavori(itemId, mediaType, button, heartIcon) {
         })
     })
     .then(response => {
+        console.log('Add response status:', response.status);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         return response.json();
     })
     .then(data => {
-        console.log('Response data:', data);
+        console.log('Add response data:', data);
         if (data.status === 'success') {
             button.classList.add('active');
             heartIcon.classList.remove('far');
@@ -54,6 +81,12 @@ function addFavori(itemId, mediaType, button, heartIcon) {
 }
 
 function removeFavori(itemId, mediaType, button, heartIcon) {
+    console.log('Removing favori:', {
+        itemId,
+        mediaType,
+        buttonClasses: button.classList.toString()
+    });
+
     fetch('/Cinetech/favoris/remove', {
         method: 'POST',
         headers: {
@@ -65,13 +98,14 @@ function removeFavori(itemId, mediaType, button, heartIcon) {
         })
     })
     .then(response => {
+        console.log('Remove response status:', response.status);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         return response.json();
     })
     .then(data => {
-        console.log('Response data:', data);
+        console.log('Remove response data:', data);
         if (data.status === 'success') {
             button.classList.remove('active');
             heartIcon.classList.remove('fas');
@@ -90,6 +124,7 @@ function removeFavori(itemId, mediaType, button, heartIcon) {
 }
 
 function showNotification(message, type) {
+    console.log('Showing notification:', { message, type });
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
