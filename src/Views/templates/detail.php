@@ -18,7 +18,7 @@
             <button class="favori-button <?= $isFavori ? 'active' : '' ?>" 
                     data-item-id="<?= $id ?>" 
                     data-media-type="<?= $mediaType ?>">
-                <i class="fas fa-heart"></i>
+                <i class="<?= $isFavori ? 'fas' : 'far' ?> fa-heart"></i>
             </button>
         </div>
     </div>

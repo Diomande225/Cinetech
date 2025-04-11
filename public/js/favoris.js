@@ -6,17 +6,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const itemId = this.dataset.itemId;
             const mediaType = this.dataset.mediaType;
             const isFavori = this.classList.contains('active');
+            const heartIcon = this.querySelector('i');
             
             if (isFavori) {
-                removeFavori(itemId, mediaType, this);
+                removeFavori(itemId, mediaType, this, heartIcon);
             } else {
-                addFavori(itemId, mediaType, this);
+                addFavori(itemId, mediaType, this, heartIcon);
             }
         });
     });
 });
 
-function addFavori(itemId, mediaType, button) {
+function addFavori(itemId, mediaType, button, heartIcon) {
     fetch('/Cinetech/favoris/add', {
         method: 'POST',
         headers: {
@@ -37,6 +38,8 @@ function addFavori(itemId, mediaType, button) {
         console.log('Response data:', data);
         if (data.status === 'success') {
             button.classList.add('active');
+            heartIcon.classList.remove('far');
+            heartIcon.classList.add('fas');
             showNotification('Favori ajouté avec succès', 'success');
         } else if (data.status === 'guest') {
             window.location.href = '/Cinetech/login';
@@ -50,7 +53,7 @@ function addFavori(itemId, mediaType, button) {
     });
 }
 
-function removeFavori(itemId, mediaType, button) {
+function removeFavori(itemId, mediaType, button, heartIcon) {
     fetch('/Cinetech/favoris/remove', {
         method: 'POST',
         headers: {
@@ -71,6 +74,8 @@ function removeFavori(itemId, mediaType, button) {
         console.log('Response data:', data);
         if (data.status === 'success') {
             button.classList.remove('active');
+            heartIcon.classList.remove('fas');
+            heartIcon.classList.add('far');
             showNotification('Favori supprimé avec succès', 'success');
         } else if (data.status === 'guest') {
             window.location.href = '/Cinetech/login';
