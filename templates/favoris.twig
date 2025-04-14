@@ -14,15 +14,18 @@
             <div class="favorites-grid">
                 {% for favori in favoris %}
                     <div class="favorite-card">
-                        <a href="/Cinetech/detail/{{ favori.media_type }}/{{ favori.item_id }}">
-                            <img src="https://image.tmdb.org/t/p/w500{{ favori.poster_path }}" alt="{{ favori.title }}" class="favorite-poster">
-                        </a>
+                        <div class="favorite-image">
+                            <a href="/Cinetech/detail/{{ favori.media_type }}/{{ favori.item_id }}">
+                                <img src="https://image.tmdb.org/t/p/w500{{ favori.poster_path }}" alt="{{ favori.title }}" class="favorite-poster">
+                            </a>
+                        </div>
                         <div class="favorite-info">
                             <h3>{{ favori.title }}</h3>
                             <p class="media-type">{{ favori.media_type == 'movie' ? 'Film' : 'Série' }}</p>
-                            <button class="favori-button active" 
+                            <button type="button" class="favori-button active" 
                                     data-item-id="{{ favori.item_id }}" 
-                                    data-media-type="{{ favori.media_type }}">
+                                    data-media-type="{{ favori.media_type }}"
+                                    onclick="handleFavoriClick.call(this, event)">
                                 <i class="fas fa-heart"></i>
                             </button>
                         </div>
@@ -34,5 +37,26 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/Cinetech/public/js/favoris.js"></script>
+    <script>
+        // Vérifier que le JavaScript est chargé
+        console.log('Template JavaScript loaded');
+        
+        // Attacher les événements aux boutons manuellement
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded in template');
+            const buttons = document.querySelectorAll('.favori-button');
+            console.log('Found buttons:', buttons.length);
+            
+            buttons.forEach(button => {
+                button.style.cursor = 'pointer';
+                button.style.zIndex = '100';
+                console.log('Button data:', {
+                    itemId: button.dataset.itemId,
+                    mediaType: button.dataset.mediaType
+                });
+            });
+        });
+    </script>
 {% endblock %} 

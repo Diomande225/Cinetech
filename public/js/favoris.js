@@ -11,31 +11,39 @@ document.addEventListener('DOMContentLoaded', function() {
             isActive: button.classList.contains('active')
         });
         
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const itemId = this.dataset.itemId;
-            const mediaType = this.dataset.mediaType;
-            const isFavori = this.classList.contains('active');
-            const heartIcon = this.querySelector('i');
-            
-            console.log('Button clicked:', {
-                itemId,
-                mediaType,
-                isFavori,
-                classList: this.classList.toString(),
-                button: this
-            });
-            
-            if (isFavori) {
-                removeFavori(itemId, mediaType, this, heartIcon);
-            } else {
-                addFavori(itemId, mediaType, this, heartIcon);
-            }
-        });
+        // Supprimer l'ancien événement s'il existe
+        button.removeEventListener('click', handleFavoriClick);
+        
+        // Ajouter le nouvel événement
+        button.addEventListener('click', handleFavoriClick);
     });
 });
+
+// Fonction globale pour gérer le clic sur les boutons de favoris
+window.handleFavoriClick = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const button = this;
+    const itemId = button.dataset.itemId;
+    const mediaType = button.dataset.mediaType;
+    const isFavori = button.classList.contains('active');
+    const heartIcon = button.querySelector('i');
+    
+    console.log('Button clicked:', {
+        itemId,
+        mediaType,
+        isFavori,
+        classList: button.classList.toString(),
+        button: button
+    });
+    
+    if (isFavori) {
+        removeFavori(itemId, mediaType, button, heartIcon);
+    } else {
+        addFavori(itemId, mediaType, button, heartIcon);
+    }
+}
 
 function addFavori(itemId, mediaType, button, heartIcon) {
     console.log('Adding favori:', {
@@ -68,6 +76,9 @@ function addFavori(itemId, mediaType, button, heartIcon) {
             heartIcon.classList.remove('far');
             heartIcon.classList.add('fas');
             showNotification('Favori ajouté avec succès', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } else if (data.status === 'guest') {
             window.location.href = '/Cinetech/login';
         } else {
@@ -111,6 +122,9 @@ function removeFavori(itemId, mediaType, button, heartIcon) {
             heartIcon.classList.remove('fas');
             heartIcon.classList.add('far');
             showNotification('Favori supprimé avec succès', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } else if (data.status === 'guest') {
             window.location.href = '/Cinetech/login';
         } else {
