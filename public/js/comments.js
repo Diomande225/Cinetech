@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Formulaire trouvé:', form);
 
     if (!form) return;
+    
+    // Récupérer le chemin de base depuis l'attribut data du body
+    const basePath = document.body.getAttribute('data-base-path') || '/Cinetech';
+    console.log('Chemin de base:', basePath);
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -23,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         try {
-            const response = await fetch('/add-comment', {
+            const response = await fetch(`${basePath}/add-comment`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content, item_id: itemId, item_type: itemType })
@@ -98,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (confirm('Voulez-vous vraiment supprimer ce commentaire ?')) {
             try {
-                const response = await fetch('/delete-comment', {
+                const response = await fetch(`${basePath}/delete-comment`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ comment_id: commentId })

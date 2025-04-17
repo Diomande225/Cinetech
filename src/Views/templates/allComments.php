@@ -1,7 +1,9 @@
+<script src="<?php echo $basePath; ?>/public/js/comments.js" defer></script>
+
 <main class="pt-20 container mx-auto px-4">
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-white">Tous les commentaires</h1>
-        <a href="/detail/<?= $mediaType ?>/<?= $itemId ?>" 
+        <a href="<?php echo $basePath; ?>/detail/<?= $mediaType ?>/<?= $itemId ?>" 
            class="inline-block mt-2 text-red-500 hover:text-red-600">
             <i class="fas fa-arrow-left mr-2"></i>Retour au détail
         </a>

@@ -31,7 +31,7 @@
                 <div class="bg-gray-700 rounded-lg overflow-hidden shadow-md">
                     <img src="<?= $actor['profile_path'] ? "https://image.tmdb.org/t/p/w185" . $actor['profile_path'] : "./public/img/placeholder_actor.jpg" ?>" alt="<?= htmlspecialchars($actor['name']) ?>" class="w-full h-40 object-cover">
                     <div class="p-2">
-                        <a href="/actor/<?= $actor['id'] ?>" class="font-semibold text-sm hover:text-red-600"><?= htmlspecialchars($actor['name']) ?></a>
+                        <a href="<?php echo $basePath; ?>/actor/<?= $actor['id'] ?>" class="font-semibold text-sm hover:text-red-600"><?= htmlspecialchars($actor['name']) ?></a>
                         <p class="text-xs text-gray-400"><?= htmlspecialchars($actor['character']) ?></p>
                     </div>
                 </div>
@@ -82,4 +82,4 @@ error_log("details['id']: " . ($details['id'] ?? 'non défini'));
 
 </main>
 
-<script src="/Cinetech/js/favoris.js"></script>
+<script src="<?php echo $basePath; ?>/js/favoris.js"></script>

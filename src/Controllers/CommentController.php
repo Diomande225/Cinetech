@@ -14,7 +14,7 @@ class CommentController {
     public function addComment() {
         error_log("=== Début addComment ===");
         error_log("Méthode HTTP: " . $_SERVER['REQUEST_METHOD']);
-        error_log("Content-Type: " . $_SERVER['CONTENT_TYPE']);
+        error_log("Content-Type: " . ($_SERVER['CONTENT_TYPE'] ?? 'non défini'));
         
         header('Content-Type: application/json');
         
@@ -58,9 +58,25 @@ class CommentController {
                 throw new \Exception('Commentaire non trouvé après création');
             }
 
+            // Assurer que le commentaire contient bien l'username
+            if (!isset($comment['username'])) {
+                // Récupérer l'username manuellement si nécessaire
+                $query = "SELECT username FROM users WHERE id = :userId";
+                $stmt = $this->commentModel->getDb()->prepare($query);
+                $stmt->execute([':userId' => $_SESSION['user_id']]);
+                $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+                
+                if ($user) {
+                    $comment['username'] = $user['username'];
+                } else {
+                    $comment['username'] = 'Utilisateur';
+                }
+            }
+
             echo json_encode([
                 'status' => 'success',
-                'comment' => $comment
+                'comment' => $comment,
+                'message' => 'Commentaire ajouté avec succès'
             ]);
 
         } catch (\Exception $e) {
@@ -80,6 +96,9 @@ class CommentController {
                 session_start();
             }
 
+            // Récupérer le chemin de base
+            $basePath = '/Cinetech';
+
             // Récupérer les commentaires
             $comments = $this->commentModel->getComments($itemId, $mediaType);
             error_log("Nombre de commentaires récupérés : " . count($comments));
@@ -89,7 +108,8 @@ class CommentController {
                 'comments' => $comments,
                 'itemId' => $itemId,
                 'itemType' => $mediaType,
-                'user_id' => $_SESSION['user_id'] ?? null
+                'user_id' => $_SESSION['user_id'] ?? null,
+                'basePath' => $basePath
             ];
 
             // Extraire les variables pour le template
@@ -111,6 +131,9 @@ class CommentController {
                 session_start();
             }
             
+            // Récupérer le chemin de base
+            $basePath = '/Cinetech';
+            
             $comments = $this->commentModel->getComments($itemId, $mediaType);
             
             $view = new View();
@@ -118,7 +141,8 @@ class CommentController {
                 'title' => 'Tous les commentaires',
                 'comments' => $comments,
                 'mediaType' => $mediaType,
-                'itemId' => $itemId
+                'itemId' => $itemId,
+                'basePath' => $basePath
             ]);
         } catch (\Exception $e) {
             error_log("Erreur dans showAllComments: " . $e->getMessage());

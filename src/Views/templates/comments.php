@@ -1,4 +1,4 @@
-<script src="/public/js/comments.js" defer></script>
+<script src="<?php echo $basePath; ?>/public/js/comments.js" defer></script>
 
 <section class="comments-section mt-8 px-8">
     <?php if (!isset($itemId) || !isset($itemType)): ?>
@@ -26,7 +26,7 @@
         <?php else: ?>
             <div class="bg-gray-800 p-4 rounded mb-6">
                 <p class="text-gray-400">
-                    <a href="/Login" class="text-red-500 hover:underline">Connectez-vous</a> 
+                    <a href="<?php echo $basePath; ?>/login" class="text-red-500 hover:underline">Connectez-vous</a> 
                     pour laisser un commentaire.
                 </p>
             </div>
@@ -63,7 +63,7 @@
 
                 <?php if ($totalComments > 5): ?>
                     <div class="text-center mt-4">
-                        <a href="/allComments/<?= $itemType ?>/<?= $itemId ?>" 
+                        <a href="<?php echo $basePath; ?>/allComments/<?= $itemType ?>/<?= $itemId ?>" 
                            class="inline-block px-6 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition duration-300">
                             Voir tous les commentaires (<?= $totalComments ?>)
                         </a>

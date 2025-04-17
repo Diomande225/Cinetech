@@ -52,7 +52,8 @@ class DetailController {
         $view->render('actor', [
             'title' => $actorDetails['name'],
             'actor' => $actorDetails,
-            'credits' => $actorCredits
+            'credits' => $actorCredits,
+            'id' => $id
         ]);
     }
 }

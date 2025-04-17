@@ -103,4 +103,8 @@ class CommentModel {
             return false;
         }
     }
+
+    public function getDb() {
+        return $this->db;
+    }
 }
