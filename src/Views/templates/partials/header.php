@@ -26,7 +26,7 @@ $basePath = '/Cinetech';
         }
     </style>
 </head>
-<body class="bg-black text-white">
+<body class="bg-black text-white" data-base-path="<?php echo $basePath; ?>">
     <header class="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black to-transparent">
         <nav class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">

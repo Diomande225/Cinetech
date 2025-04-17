@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('search-input');
     const resultsContainer = document.getElementById('search-results');
     let debounceTimer;
+    
+    // Récupérer le chemin de base depuis une variable globale ou un attribut data
+    const basePath = document.body.getAttribute('data-base-path') || '/Cinetech';
 
     function debounce(func, delay) {
         return function() {
@@ -28,13 +31,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const performSearch = debounce(function(query) {
         if (query.length >= 2) {
-            fetch(`/search/autocomplete?query=${encodeURIComponent(query)}`)
-                .then(response => response.json())
+            console.log('Searching for:', query);
+            console.log('Using base path:', basePath);
+            
+            fetch(`${basePath}/search/autocomplete?query=${encodeURIComponent(query)}`)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Search results:', data);
                     resultsContainer.innerHTML = '';
                     resultsContainer.classList.remove('hidden');
 
                     if (data.results && data.results.length > 0) {
+                        console.log(`Found ${data.results.length} results`);
                         data.results.forEach(item => {
                             if ((item.title || item.name).toLowerCase().startsWith(query.toLowerCase())) {
                                 const resultItem = document.createElement('div');
@@ -76,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 resultItem.appendChild(textContainer);
 
                                 resultItem.onclick = function() {
-                                    window.location.href = `/detail/${item.media_type}/${item.id}`;
+                                    window.location.href = `${basePath}/detail/${item.media_type}/${item.id}`;
                                 };
 
                                 resultsContainer.appendChild(resultItem);
