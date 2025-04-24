@@ -20,12 +20,16 @@
         <div class="flex overflow-x-auto space-x-4 pb-4">
             <?php foreach (array_slice($trendingItems, 0, 10) as $item): ?>
                 <div class="flex-none w-48 transition-transform duration-300 hover:scale-105">
-                    <img src="<?= $item['poster_path'] ? (new \App\Services\TMDBApi())->getImageUrl($item['poster_path']) : "./public/img/placeholder_trending.jpg" ?>" alt="<?= htmlspecialchars($item['title'] ?? $item['name']) ?>" class="w-full h-72 object-cover rounded">
-                    <div class="mt-2">
-                        <h3 class="text-lg font-semibold text-white truncate"><?= htmlspecialchars($item['title'] ?? $item['name']) ?></h3>
-                        <p class="text-sm text-gray-400"><?= substr($item['release_date'] ?? $item['first_air_date'], 0, 4) ?></p>
-                        <a href="/Cinetech/detail/<?= $item['media_type'] ?>/<?= $item['id'] ?>" class="mt-2 text-red-600 hover:underline text-sm">Voir Détails</a>
-                        <button class="favori-button mt-2 text-sm flex items-center" data-item-id="<?= $item['id'] ?>" data-media-type="<?= $item['media_type'] ?>">
+                    <a href="/Cinetech/detail/<?= $item['media_type'] ?>/<?= $item['id'] ?>" class="block">
+                        <img src="<?= $item['poster_path'] ? (new \App\Services\TMDBApi())->getImageUrl($item['poster_path']) : "./public/img/placeholder_trending.jpg" ?>" alt="<?= htmlspecialchars($item['title'] ?? $item['name']) ?>" class="w-full h-72 object-cover rounded">
+                        <div class="mt-2">
+                            <h3 class="text-lg font-semibold text-white truncate"><?= htmlspecialchars($item['title'] ?? $item['name']) ?></h3>
+                            <p class="text-sm text-gray-400"><?= substr($item['release_date'] ?? $item['first_air_date'], 0, 4) ?></p>
+                        </div>
+                    </a>
+                    <div class="flex justify-between items-center mt-2">
+                        <a href="/Cinetech/detail/<?= $item['media_type'] ?>/<?= $item['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
+                        <button class="favori-button text-sm flex items-center" data-item-id="<?= $item['id'] ?>" data-media-type="<?= $item['media_type'] ?>">
                             <i class="<?= in_array($item['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                         </button>
                     </div>
