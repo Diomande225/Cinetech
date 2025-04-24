@@ -40,7 +40,6 @@
                     <h3 class="text-lg font-semibold text-white mb-2"><?= htmlspecialchars($serie['name']) ?></h3>
                     <p class="text-gray-400 text-sm mb-2"><?= date('Y', strtotime($serie['first_air_date'])) ?></p>
                     <p class="text-gray-400 text-sm mb-2">Note: <?= number_format($serie['vote_average'], 1) ?>/10</p>
-                    <p class="text-gray-400 text-sm mb-2"><?= substr($serie['overview'], 0, 100) ?>...</p>
                     <div class="flex justify-between items-center mt-4">
                         <a href="/Cinetech/detail/tv/<?= $serie['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
                         <button class="favori-button text-sm flex items-center" data-item-id="<?= $serie['id'] ?>" data-media-type="tv">

@@ -40,7 +40,6 @@
                     <h3 class="text-lg font-semibold text-white mb-2"><?= htmlspecialchars($movie['title']) ?></h3>
                     <p class="text-gray-400 text-sm mb-2"><?= date('Y', strtotime($movie['release_date'])) ?></p>
                     <p class="text-gray-400 text-sm mb-2">Note: <?= number_format($movie['vote_average'], 1) ?>/10</p>
-                    <p class="text-gray-400 text-sm mb-2"><?= substr($movie['overview'], 0, 100) ?>...</p>
                     <div class="flex justify-between items-center mt-4">
                         <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
                         <button class="favori-button text-sm flex items-center" data-item-id="<?= $movie['id'] ?>" data-media-type="movie">
