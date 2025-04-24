@@ -30,7 +30,7 @@
     <!-- Grille de films -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         <?php foreach ($movies as $movie): ?>
-            <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
+            <div class="bg-black rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
                 <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>" class="block">
                     <img src="<?= $movie['poster_path'] ? (new \App\Services\TMDBApi())->getImageUrl($movie['poster_path'], 'w500') : './public/img/placeholder_poster.jpg' ?>" 
                          alt="<?= htmlspecialchars($movie['title']) ?>" 
@@ -42,8 +42,7 @@
                         <p class="text-gray-400 text-sm mb-2">Note: <?= number_format($movie['vote_average'], 1) ?>/10</p>
                     </div>
                 </a>
-                <div class="px-4 pb-4 flex justify-between items-center">
-                    <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
+                <div class="px-4 pb-4 flex justify-end items-center">
                     <button class="favori-button text-sm flex items-center" data-item-id="<?= $movie['id'] ?>" data-media-type="movie">
                         <i class="<?= in_array($movie['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                     </button>

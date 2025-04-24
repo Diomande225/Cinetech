@@ -28,7 +28,7 @@
         <h2 class="text-2xl font-bold mb-4">Casting</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <?php foreach (array_slice($details['credits']['cast'], 0, 6) as $actor): ?>
-                <div class="bg-gray-700 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-105">
+                <div class="bg-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-105">
                     <a href="<?php echo $basePath; ?>/actor/<?= $actor['id'] ?>" class="block">
                         <img src="<?= $actor['profile_path'] ? "https://image.tmdb.org/t/p/w185" . $actor['profile_path'] : "./public/img/placeholder_actor.jpg" ?>" alt="<?= htmlspecialchars($actor['name']) ?>" class="w-full h-40 object-cover">
                         <div class="p-2">

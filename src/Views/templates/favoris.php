@@ -11,26 +11,27 @@
     <?php else: ?>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             <?php foreach ($favoris as $favori): ?>
-                <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg relative group">
+                <div class="bg-black rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
                     <!-- Image avec lien -->
                     <a href="/Cinetech/detail/<?= $favori['media_type'] ?>/<?= $favori['item_id'] ?>" class="block">
                         <img 
                             src="<?= $favori['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $favori['poster_path'] : "./public/img/placeholder.jpg" ?>" 
                             alt="<?= htmlspecialchars($favori['title'] ?? $favori['name']) ?>" 
-                            class="w-full h-60 object-cover transition-transform duration-300 group-hover:scale-105"
+                            class="w-full h-60 object-cover"
                         >
+                        <!-- Informations -->
+                        <div class="p-4">
+                            <h3 class="text-xl font-semibold mb-2 line-clamp-2 text-white">
+                                <?= htmlspecialchars($favori['title'] ?? $favori['name']) ?>
+                            </h3>
+                            <p class="text-sm text-gray-400 mb-3">
+                                <?= $favori['media_type'] === 'movie' ? 'Film' : 'Série' ?>
+                            </p>
+                        </div>
                     </a>
-
-                    <!-- Informations -->
-                    <div class="p-4">
-                        <h3 class="text-xl font-semibold mb-2 line-clamp-2">
-                            <?= htmlspecialchars($favori['title'] ?? $favori['name']) ?>
-                        </h3>
-                        <p class="text-sm text-gray-400 mb-3">
-                            <?= $favori['media_type'] === 'movie' ? 'Film' : 'Série' ?>
-                        </p>
-                        
-                        <!-- Bouton Favori -->
+                    
+                    <!-- Bouton Favori -->
+                    <div class="px-4 pb-4">
                         <button 
                             type="button"
                             class="favori-button active w-full flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"

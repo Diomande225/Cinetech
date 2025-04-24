@@ -27,8 +27,7 @@
                             <p class="text-sm text-gray-400"><?= substr($item['release_date'] ?? $item['first_air_date'], 0, 4) ?></p>
                         </div>
                     </a>
-                    <div class="flex justify-between items-center mt-2">
-                        <a href="/Cinetech/detail/<?= $item['media_type'] ?>/<?= $item['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
+                    <div class="flex justify-end items-center mt-2">
                         <button class="favori-button text-sm flex items-center" data-item-id="<?= $item['id'] ?>" data-media-type="<?= $item['media_type'] ?>">
                             <i class="<?= in_array($item['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                         </button>
@@ -51,8 +50,7 @@
                             <p class="text-sm text-gray-400"><?= substr($movie['release_date'], 0, 4) ?></p>
                         </div>
                     </a>
-                    <div class="flex justify-between items-center mt-2">
-                        <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
+                    <div class="flex justify-end items-center mt-2">
                         <button class="favori-button text-sm flex items-center" data-item-id="<?= $movie['id'] ?>" data-media-type="movie">
                             <i class="<?= in_array($movie['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                         </button>
@@ -75,8 +73,7 @@
                             <p class="text-sm text-gray-400"><?= substr($series['first_air_date'], 0, 4) ?></p>
                         </div>
                     </a>
-                    <div class="flex justify-between items-center mt-2">
-                        <a href="/Cinetech/detail/tv/<?= $series['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
+                    <div class="flex justify-end items-center mt-2">
                         <button class="favori-button text-sm flex items-center" data-item-id="<?= $series['id'] ?>" data-media-type="tv">
                             <i class="<?= in_array($series['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                         </button>
