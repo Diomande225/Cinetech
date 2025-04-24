@@ -45,15 +45,26 @@ class DetailController {
     }
 
     public function actor($id) {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
         $actorDetails = $this->tmdbApi->fetchActorDetails($id);
         $actorCredits = $this->tmdbApi->fetchActorCredits($id);
+        
+        // Récupérer les favoris de l'utilisateur
+        $userFavorites = [];
+        if (isset($_SESSION['user_id'])) {
+            $userFavorites = $this->favorisModel->getUserFavoriteIds($_SESSION['user_id']);
+        }
 
         $view = new View();
         $view->render('actor', [
             'title' => $actorDetails['name'],
             'actor' => $actorDetails,
             'credits' => $actorCredits,
-            'id' => $id
+            'id' => $id,
+            'userFavorites' => $userFavorites
         ]);
     }
 }

@@ -22,7 +22,15 @@
                         <p class="text-sm mt-2 text-gray-400">Rôle: <?= htmlspecialchars($credit['character']) ?></p>
                     </div>
                 </a>
+                <div class="px-4 pb-4 flex justify-between items-center">
+                    <a href="<?php echo $basePath; ?>/detail/<?= $credit['media_type'] ?>/<?= $credit['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
+                    <button class="favori-button text-sm flex items-center" data-item-id="<?= $credit['id'] ?>" data-media-type="<?= $credit['media_type'] ?>">
+                        <i class="<?= in_array($credit['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
+                    </button>
+                </div>
             </div>
         <?php endforeach; ?>
     </div>
 </main>
+
+<script src="<?php echo $basePath; ?>/js/favoris.js"></script>
