@@ -14,13 +14,14 @@
     <h2 class="text-2xl font-bold mb-4">Filmographie</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         <?php foreach ($credits['cast'] as $credit): ?>
-            <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
-                <img src="<?= $credit['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $credit['poster_path'] : $basePath . "/public/img/placeholder_movie.jpg" ?>" alt="<?= htmlspecialchars($credit['title'] ?? $credit['name']) ?>" class="w-full h-60 object-cover">
-                <div class="p-4">
-                    <h3 class="text-xl font-semibold"><?= htmlspecialchars($credit['title'] ?? $credit['name']) ?></h3>
-                    <p class="text-sm mt-2">Rôle: <?= htmlspecialchars($credit['character']) ?></p>
-                    <a href="<?php echo $basePath; ?>/detail/<?= $credit['media_type'] ?>/<?= $credit['id'] ?>" class="block mt-4 text-red-600 hover:underline">Voir Détails</a>
-                </div>
+            <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
+                <a href="<?php echo $basePath; ?>/detail/<?= $credit['media_type'] ?>/<?= $credit['id'] ?>" class="block">
+                    <img src="<?= $credit['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $credit['poster_path'] : $basePath . "/public/img/placeholder_movie.jpg" ?>" alt="<?= htmlspecialchars($credit['title'] ?? $credit['name']) ?>" class="w-full h-60 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-xl font-semibold text-white"><?= htmlspecialchars($credit['title'] ?? $credit['name']) ?></h3>
+                        <p class="text-sm mt-2 text-gray-400">Rôle: <?= htmlspecialchars($credit['character']) ?></p>
+                    </div>
+                </a>
             </div>
         <?php endforeach; ?>
     </div>

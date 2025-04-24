@@ -30,7 +30,7 @@
     <!-- Grille de séries -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         <?php foreach ($series as $serie): ?>
-            <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
                 <a href="/Cinetech/detail/tv/<?= $serie['id'] ?>" class="block">
                     <img src="<?= $serie['poster_path'] ? (new \App\Services\TMDBApi())->getImageUrl($serie['poster_path'], 'w500') : './public/img/placeholder_poster.jpg' ?>" 
                          alt="<?= htmlspecialchars($serie['name']) ?>" 

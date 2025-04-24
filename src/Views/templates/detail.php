@@ -28,12 +28,14 @@
         <h2 class="text-2xl font-bold mb-4">Casting</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <?php foreach (array_slice($details['credits']['cast'], 0, 6) as $actor): ?>
-                <div class="bg-gray-700 rounded-lg overflow-hidden shadow-md">
-                    <img src="<?= $actor['profile_path'] ? "https://image.tmdb.org/t/p/w185" . $actor['profile_path'] : "./public/img/placeholder_actor.jpg" ?>" alt="<?= htmlspecialchars($actor['name']) ?>" class="w-full h-40 object-cover">
-                    <div class="p-2">
-                        <a href="<?php echo $basePath; ?>/actor/<?= $actor['id'] ?>" class="font-semibold text-sm hover:text-red-600"><?= htmlspecialchars($actor['name']) ?></a>
-                        <p class="text-xs text-gray-400"><?= htmlspecialchars($actor['character']) ?></p>
-                    </div>
+                <div class="bg-gray-700 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-105">
+                    <a href="<?php echo $basePath; ?>/actor/<?= $actor['id'] ?>" class="block">
+                        <img src="<?= $actor['profile_path'] ? "https://image.tmdb.org/t/p/w185" . $actor['profile_path'] : "./public/img/placeholder_actor.jpg" ?>" alt="<?= htmlspecialchars($actor['name']) ?>" class="w-full h-40 object-cover">
+                        <div class="p-2">
+                            <p class="font-semibold text-sm text-white hover:text-red-600"><?= htmlspecialchars($actor['name']) ?></p>
+                            <p class="text-xs text-gray-400"><?= htmlspecialchars($actor['character']) ?></p>
+                        </div>
+                    </a>
                 </div>
             <?php endforeach; ?>
         </div>
