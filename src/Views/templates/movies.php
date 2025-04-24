@@ -31,21 +31,22 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         <?php foreach ($movies as $movie): ?>
             <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>">
+                <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>" class="block">
                     <img src="<?= $movie['poster_path'] ? (new \App\Services\TMDBApi())->getImageUrl($movie['poster_path'], 'w500') : './public/img/placeholder_poster.jpg' ?>" 
                          alt="<?= htmlspecialchars($movie['title']) ?>" 
                          class="w-full h-auto object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-white mb-2"><?= htmlspecialchars($movie['title']) ?></h3>
-                    <p class="text-gray-400 text-sm mb-2"><?= date('Y', strtotime($movie['release_date'])) ?></p>
-                    <p class="text-gray-400 text-sm mb-2">Note: <?= number_format($movie['vote_average'], 1) ?>/10</p>
-                    <div class="flex justify-between items-center mt-4">
-                        <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
-                        <button class="favori-button text-sm flex items-center" data-item-id="<?= $movie['id'] ?>" data-media-type="movie">
-                            <i class="<?= in_array($movie['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
-                        </button>
+                
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-2"><?= htmlspecialchars($movie['title']) ?></h3>
+                        <p class="text-gray-400 text-sm mb-2"><?= date('Y', strtotime($movie['release_date'])) ?></p>
+                        <p class="text-gray-400 text-sm mb-2">Note: <?= number_format($movie['vote_average'], 1) ?>/10</p>
                     </div>
+                </a>
+                <div class="px-4 pb-4 flex justify-between items-center">
+                    <a href="/Cinetech/detail/movie/<?= $movie['id'] ?>" class="text-red-600 hover:underline text-sm">Voir Détails</a>
+                    <button class="favori-button text-sm flex items-center" data-item-id="<?= $movie['id'] ?>" data-media-type="movie">
+                        <i class="<?= in_array($movie['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
+                    </button>
                 </div>
             </div>
         <?php endforeach; ?>
