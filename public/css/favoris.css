@@ -7,17 +7,27 @@
 }
 
 .favori-button i {
-    font-size: 1.5rem;
-    color: #6b7280;
+    font-size: 4rem !important;
+    color: #9ca3af;
     transition: all 0.3s ease;
 }
 
 .favori-button.active i {
     color: #ef4444;
+    filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.5));
 }
 
 .favori-button:hover i {
-    transform: scale(1.1);
+    transform: scale(1.2);
+}
+
+/* Styles spécifiques pour garantir que l'icône est bien visible */
+button.favori-button i.fa-heart,
+button.favori-button i.fas,
+button.favori-button i.far {
+    font-size: 4rem !important;
+    display: inline-block !important;
+    line-height: 1 !important;
 }
 
 .notification {

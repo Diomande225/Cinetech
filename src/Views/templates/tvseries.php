@@ -43,7 +43,7 @@
                     </div>
                 </a>
                 <div class="px-4 pb-4 flex justify-end items-center">
-                    <button class="favori-button text-sm flex items-center" data-item-id="<?= $serie['id'] ?>" data-media-type="tv">
+                    <button class="favori-button text-sm flex items-center p-2" data-item-id="<?= $serie['id'] ?>" data-media-type="tv">
                         <i class="<?= in_array($serie['id'], $userFavorites ?? []) ? 'fas' : 'far' ?> fa-heart"></i>
                     </button>
                 </div>

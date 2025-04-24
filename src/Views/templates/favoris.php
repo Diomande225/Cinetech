@@ -34,14 +34,14 @@
                     <div class="px-4 pb-4">
                         <button 
                             type="button"
-                            class="favori-button active w-full flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                            class="favori-button active w-full flex items-center justify-center space-x-3 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg transition-colors"
                             data-item-id="<?= $favori['item_id'] ?>"
                             data-media-type="<?= $favori['media_type'] ?>"
                             onclick="handleFavoriClick.call(this, event)"
                             style="cursor: pointer; z-index: 10;"
                         >
-                            <i class="fas fa-heart"></i>
-                            <span>Retirer des favoris</span>
+                            <i class="fas fa-heart text-3xl"></i>
+                            <span class="text-lg font-medium">Retirer des favoris</span>
                         </button>
                     </div>
                 </div>
