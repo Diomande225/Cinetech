@@ -62,8 +62,9 @@ class DetailController extends BaseController {
         }
 
         // Traduire la biographie si nécessaire
-        if (isset($actorDetails['biography'])) {
-            $actorDetails['biography_translated'] = translateExternal($actorDetails['biography']);
+        if (!empty($actorDetails['biography'])) {
+            // Traduire la biographie si elle existe
+            $actorDetails['biography_translated'] = translateWithCache($actorDetails['biography']);
         }
 
         $this->view->render('actor', [

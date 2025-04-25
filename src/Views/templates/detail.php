@@ -15,7 +15,7 @@
                         <i class="fas fa-language"></i>
                     </span>
                 </h3>
-                <p class="text-gray-300 text-sm md:text-base"><?= htmlspecialchars(translateExternal($details['overview'])) ?></p>
+                <p class="text-gray-300 text-sm md:text-base"><?= htmlspecialchars(translateWithCache($details['overview'])) ?></p>
             </div>
             
             <!-- Informations avec labels traduits -->
@@ -52,7 +52,7 @@
                         <img src="<?= $actor['profile_path'] ? "https://image.tmdb.org/t/p/w185" . $actor['profile_path'] : "./public/img/placeholder_actor.jpg" ?>" alt="<?= htmlspecialchars($actor['name']) ?>" class="w-full h-40 object-cover">
                         <div class="p-2">
                             <p class="font-semibold text-sm text-white hover:text-red-600"><?= htmlspecialchars($actor['name']) ?></p>
-                            <p class="text-xs text-gray-400"><?= htmlspecialchars(translateExternal($actor['character'])) ?></p>
+                            <p class="text-xs text-gray-400"><?= htmlspecialchars(translateWithCache($actor['character'])) ?></p>
                         </div>
                     </a>
                 </div>

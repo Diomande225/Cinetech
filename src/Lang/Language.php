@@ -2,13 +2,17 @@
 
 namespace App\Lang;
 
+use App\Services\TranslationCache;
+
 class Language {
     private static $instance = null;
     private $lang = 'fr'; // Langue par défaut
     private $translations = [];
+    private $translationCache = null;
     
     private function __construct() {
         $this->setLanguage($this->getPreferredLanguage());
+        $this->translationCache = new TranslationCache();
     }
     
     public static function getInstance() {
@@ -132,6 +136,7 @@ class Language {
     
     /**
      * Traduit automatiquement un texte externe via API (utilise Google Translate API)
+     * Cette version utilise un cache sur disque pour de meilleures performances
      */
     public function translateExternal($text, $sourceLanguage = 'en') {
         // Si le texte est vide ou la langue source est la même que la langue cible, retourner le texte tel quel
@@ -139,23 +144,39 @@ class Language {
             return $text;
         }
         
-        // Pour le développement, utilisons une approche sans API (stockage en session)
+        // Initialiser le cache si nécessaire
+        if ($this->translationCache === null) {
+            $this->translationCache = new TranslationCache();
+        }
+        
+        // Vérifier si la traduction est déjà en cache sur disque
+        $cachedTranslation = $this->translationCache->get($text, $sourceLanguage, $this->lang);
+        
+        if ($cachedTranslation !== null) {
+            return $cachedTranslation;
+        }
+        
+        // Si pas en cache sur disque, vérifier le cache en session temporaire
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
         
-        // Générer une clé unique pour ce texte et cette langue
+        // Générer une clé unique pour ce texte et cette langue (cache secondaire en session)
         $cacheKey = 'translated_' . md5($text) . '_' . $this->lang;
         
-        // Vérifier si la traduction est déjà en cache
+        // Vérifier si la traduction est déjà en cache en session
         if (isset($_SESSION[$cacheKey])) {
-            return $_SESSION[$cacheKey];
+            // Sauvegarder en cache sur disque pour la prochaine fois
+            $translation = $_SESSION[$cacheKey];
+            $this->translationCache->set($text, $translation, $sourceLanguage, $this->lang);
+            return $translation;
         }
         
         // Utiliser l'API Google Translate
         $translatedText = $this->translateWithGoogleAPI($text, $sourceLanguage, $this->lang);
         
-        // Stocker en cache
+        // Stocker en cache sur disque et en session
+        $this->translationCache->set($text, $translatedText, $sourceLanguage, $this->lang);
         $_SESSION[$cacheKey] = $translatedText;
         
         return $translatedText;

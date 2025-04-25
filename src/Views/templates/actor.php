@@ -33,7 +33,7 @@
                     <img src="<?= $credit['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $credit['poster_path'] : $basePath . "/public/img/placeholder_movie.jpg" ?>" alt="<?= htmlspecialchars($credit['title'] ?? $credit['name']) ?>" class="w-full h-60 object-cover">
                     <div class="p-4">
                         <h3 class="text-xl font-semibold text-white"><?= htmlspecialchars($credit['title'] ?? $credit['name']) ?></h3>
-                        <p class="text-sm mt-2 text-gray-400"><?= __('role') ?>: <?= htmlspecialchars(translateExternal($credit['character'])) ?></p>
+                        <p class="text-sm mt-2 text-gray-400"><?= __('role') ?>: <?= htmlspecialchars(translateWithCache($credit['character'])) ?></p>
                     </div>
                 </a>
                 <div class="px-4 pb-4 flex justify-end items-center">
