@@ -154,4 +154,92 @@ class AdminController extends BaseController {
         header('Content-Type: application/json');
         echo json_encode($data);
     }
+    
+    /**
+     * Récupère les détails d'un utilisateur pour l'édition
+     */
+    public function getUserDetails($userId) {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            $this->jsonResponse(['success' => false, 'message' => 'Non autorisé']);
+            return;
+        }
+        
+        // Récupérer les détails de l'utilisateur
+        $user = User::findById($userId);
+        
+        if (!$user) {
+            $this->jsonResponse(['success' => false, 'message' => 'Utilisateur non trouvé']);
+            return;
+        }
+        
+        // Envoyer les données de l'utilisateur (sans mot de passe)
+        unset($user['password']);
+        $this->jsonResponse(['success' => true, 'user' => $user]);
+    }
+    
+    /**
+     * Met à jour les informations d'un utilisateur
+     */
+    public function updateUser($userId) {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            $this->jsonResponse(['success' => false, 'message' => 'Non autorisé']);
+            return;
+        }
+        
+        // Récupérer les données du formulaire
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$data) {
+            $this->jsonResponse(['success' => false, 'message' => 'Données invalides']);
+            return;
+        }
+        
+        // Valider les données
+        $username = $data['username'] ?? '';
+        $email = $data['email'] ?? '';
+        $errors = [];
+        
+        if (empty($username)) {
+            $errors[] = 'Le nom d\'utilisateur est requis';
+        } elseif (User::usernameExists($username, $userId)) {
+            $errors[] = 'Ce nom d\'utilisateur est déjà utilisé';
+        }
+        
+        if (empty($email)) {
+            $errors[] = 'L\'email est requis';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'L\'email n\'est pas valide';
+        } elseif (User::emailExists($email, $userId)) {
+            $errors[] = 'Cet email est déjà utilisé';
+        }
+        
+        if (!empty($errors)) {
+            $this->jsonResponse(['success' => false, 'errors' => $errors]);
+            return;
+        }
+        
+        // Mettre à jour l'utilisateur
+        $updateData = [
+            'username' => $username,
+            'email' => $email
+        ];
+        
+        $success = User::updateUser($userId, $updateData);
+        
+        if ($success) {
+            $this->jsonResponse([
+                'success' => true, 
+                'message' => 'Utilisateur mis à jour avec succès',
+                'user' => [
+                    'id' => $userId,
+                    'username' => $username,
+                    'email' => $email
+                ]
+            ]);
+        } else {
+            $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la mise à jour']);
+        }
+    }
 } 

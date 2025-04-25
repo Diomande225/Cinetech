@@ -84,4 +84,85 @@ class User {
         $stmt->bindParam(':userId', $userId, \PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    /**
+     * Met à jour les informations d'un utilisateur
+     * 
+     * @param int $userId ID de l'utilisateur
+     * @param array $data Données à mettre à jour (username, email)
+     * @return bool Succès ou échec
+     */
+    public static function updateUser($userId, $data) {
+        $db = Connection::getInstance();
+        
+        $setFields = [];
+        $params = [':userId' => $userId];
+        
+        // Construire la requête dynamiquement selon les champs fournis
+        if (isset($data['username'])) {
+            $setFields[] = "username = :username";
+            $params[':username'] = $data['username'];
+        }
+        
+        if (isset($data['email'])) {
+            $setFields[] = "email = :email";
+            $params[':email'] = $data['email'];
+        }
+        
+        // Si aucun champ à mettre à jour
+        if (empty($setFields)) {
+            return false;
+        }
+        
+        $query = "UPDATE users SET " . implode(', ', $setFields) . " WHERE id = :userId";
+        $stmt = $db->prepare($query);
+        
+        return $stmt->execute($params);
+    }
+    
+    /**
+     * Vérifie si un nom d'utilisateur existe déjà (sauf pour l'utilisateur spécifié)
+     * 
+     * @param string $username Nom d'utilisateur à vérifier
+     * @param int $excludeUserId ID de l'utilisateur à exclure de la vérification
+     * @return bool True si le nom d'utilisateur existe déjà
+     */
+    public static function usernameExists($username, $excludeUserId = null) {
+        $db = Connection::getInstance();
+        $query = "SELECT COUNT(*) FROM users WHERE username = :username";
+        $params = [':username' => $username];
+        
+        if ($excludeUserId !== null) {
+            $query .= " AND id != :excludeUserId";
+            $params[':excludeUserId'] = $excludeUserId;
+        }
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        
+        return $stmt->fetchColumn() > 0;
+    }
+    
+    /**
+     * Vérifie si un email existe déjà (sauf pour l'utilisateur spécifié)
+     * 
+     * @param string $email Email à vérifier
+     * @param int $excludeUserId ID de l'utilisateur à exclure de la vérification
+     * @return bool True si l'email existe déjà
+     */
+    public static function emailExists($email, $excludeUserId = null) {
+        $db = Connection::getInstance();
+        $query = "SELECT COUNT(*) FROM users WHERE email = :email";
+        $params = [':email' => $email];
+        
+        if ($excludeUserId !== null) {
+            $query .= " AND id != :excludeUserId";
+            $params[':excludeUserId'] = $excludeUserId;
+        }
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        
+        return $stmt->fetchColumn() > 0;
+    }
 }

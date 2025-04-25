@@ -96,6 +96,9 @@
                                                         <i class="fas fa-user-check"></i>
                                                     </button>
                                                 <?php endif; ?>
+                                                <button class="edit-user text-blue-600 hover:text-blue-900" title="Modifier" data-user-id="<?= $user['id'] ?>">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
                                                 <button class="delete-user text-red-600 hover:text-red-900" title="Supprimer">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
@@ -165,6 +168,46 @@
             <p>&copy; <?= date('Y') ?> Cinetech - Administration</p>
         </div>
     </footer>
+
+    <!-- Modal d'édition d'utilisateur -->
+    <div id="edit-user-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="modal-overlay absolute inset-0 bg-black opacity-50"></div>
+        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!-- En-tête -->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold text-gray-800">Modifier l'utilisateur</p>
+                    <div class="modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-gray-600" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9l4.47-4.47z"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Formulaire -->
+                <form id="edit-user-form">
+                    <input type="hidden" id="edit-user-id">
+                    
+                    <div class="mb-4">
+                        <label for="edit-username" class="block text-gray-700 text-sm font-bold mb-2">Nom d'utilisateur</label>
+                        <input type="text" id="edit-username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <p class="text-red-500 text-xs italic hidden" id="username-error"></p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="edit-email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                        <input type="email" id="edit-email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <p class="text-red-500 text-xs italic hidden" id="email-error"></p>
+                    </div>
+                    
+                    <div class="flex justify-end pt-2">
+                        <button type="button" class="modal-close px-4 bg-gray-500 text-white rounded-lg py-2 mr-2">Annuler</button>
+                        <button type="submit" class="px-4 bg-blue-500 text-white rounded-lg py-2">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript pour les interactions -->
     <script>
@@ -276,6 +319,125 @@
                             console.error('Error:', error);
                         });
                     }
+                });
+            });
+            
+            // Gestion de l'édition des utilisateurs
+            const editUserButtons = document.querySelectorAll('.edit-user');
+            const editUserModal = document.getElementById('edit-user-modal');
+            const editUserForm = document.getElementById('edit-user-form');
+            const editUserId = document.getElementById('edit-user-id');
+            const editUsername = document.getElementById('edit-username');
+            const editEmail = document.getElementById('edit-email');
+            const usernameError = document.getElementById('username-error');
+            const emailError = document.getElementById('email-error');
+            const modalCloseButtons = document.querySelectorAll('.modal-close');
+            
+            // Ouvrir le modal d'édition
+            editUserButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.dataset.userId;
+                    
+                    // Réinitialiser les erreurs
+                    usernameError.classList.add('hidden');
+                    emailError.classList.add('hidden');
+                    
+                    // Récupérer les données de l'utilisateur
+                    fetch('<?= $viewData['basePath'] ?>/admin/users/details/' + userId)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Remplir le formulaire
+                                editUserId.value = data.user.id;
+                                editUsername.value = data.user.username;
+                                editEmail.value = data.user.email;
+                                
+                                // Afficher le modal
+                                editUserModal.classList.remove('hidden');
+                            } else {
+                                showNotification(data.message || 'Erreur lors de la récupération des données', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            showNotification('Erreur de communication avec le serveur', 'error');
+                            console.error('Error:', error);
+                        });
+                });
+            });
+            
+            // Fermer le modal
+            modalCloseButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    editUserModal.classList.add('hidden');
+                });
+            });
+            
+            // Gestion du clic en dehors du modal pour le fermer
+            editUserModal.addEventListener('click', function(event) {
+                if (event.target === editUserModal) {
+                    editUserModal.classList.add('hidden');
+                }
+            });
+            
+            // Soumission du formulaire
+            editUserForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Réinitialiser les erreurs
+                usernameError.classList.add('hidden');
+                emailError.classList.add('hidden');
+                
+                // Récupérer les données du formulaire
+                const userId = editUserId.value;
+                const username = editUsername.value.trim();
+                const email = editEmail.value.trim();
+                
+                // Envoyer les données
+                fetch('<?= $viewData['basePath'] ?>/admin/users/update/' + userId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Fermer le modal
+                        editUserModal.classList.add('hidden');
+                        
+                        // Afficher la notification de succès
+                        showNotification('Utilisateur mis à jour avec succès', 'success');
+                        
+                        // Mettre à jour les données dans le tableau
+                        const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
+                        if (userRow) {
+                            userRow.querySelector('td:nth-child(2)').textContent = username;
+                            userRow.querySelector('td:nth-child(3)').textContent = email;
+                        }
+                    } else {
+                        // Afficher les erreurs
+                        if (data.errors) {
+                            data.errors.forEach(error => {
+                                if (error.includes('nom d\'utilisateur')) {
+                                    usernameError.textContent = error;
+                                    usernameError.classList.remove('hidden');
+                                } else if (error.includes('email')) {
+                                    emailError.textContent = error;
+                                    emailError.classList.remove('hidden');
+                                }
+                            });
+                        } else {
+                            showNotification(data.message || 'Erreur lors de la mise à jour', 'error');
+                        }
+                    }
+                })
+                .catch(error => {
+                    showNotification('Erreur de communication avec le serveur', 'error');
+                    console.error('Error:', error);
                 });
             });
             

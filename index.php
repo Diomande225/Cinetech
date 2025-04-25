@@ -60,6 +60,8 @@ $router->add('admin/comments/delete/:id', AdminController::class, 'deleteComment
 $router->add('admin/users/activate/:id', AdminController::class, 'activateUser');
 $router->add('admin/users/deactivate/:id', AdminController::class, 'deactivateUser');
 $router->add('admin/users/delete/:id', AdminController::class, 'deleteUser');
+$router->add('admin/users/details/:id', AdminController::class, 'getUserDetails');
+$router->add('admin/users/update/:id', AdminController::class, 'updateUser');
 
 // Obtenir le chemin URL actuel
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
