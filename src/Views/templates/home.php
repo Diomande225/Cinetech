@@ -1,30 +1,30 @@
 <main class="pt-20 bg-black">
     <!-- Featured Content Banner -->
-    <section id="featured-banner" class="relative h-[70vh] mb-12 overflow-hidden">
+    <section id="featured-banner" class="relative h-[50vh] md:h-[70vh] mb-8 md:mb-12 overflow-hidden">
         <?php foreach (array_slice($trendingItems, 0, 5) as $index => $item): ?>
             <div class="banner-item absolute inset-0 <?= $index === 0 ? 'active' : 'hidden' ?>" data-index="<?= $index ?>">
                 <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000" style="background-image: url('<?= $item['backdrop_path'] ? (new \App\Services\TMDBApi())->getImageUrl($item['backdrop_path'], 'original') : "./public/img/placeholder_backdrop.jpg" ?>');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 p-8 text-white max-w-2xl">
-                    <h1 class="text-5xl font-bold mb-4"><?= htmlspecialchars($item['title'] ?? $item['name']) ?></h1>
-                    <p class="text-xl mb-4"><?= substr($item['overview'], 0, 150) ?>...</p>
-                    <a href="/Cinetech/detail/<?= $item['media_type'] ?>/<?= $item['id'] ?>" class="inline-block px-6 py-3 bg-red-600 text-white rounded hover:bg-red-700 transition duration-300">Voir Détails</a>
+                <div class="absolute bottom-0 left-0 p-4 md:p-8 text-white max-w-2xl">
+                    <h1 class="text-2xl md:text-5xl font-bold mb-2 md:mb-4"><?= htmlspecialchars($item['title'] ?? $item['name']) ?></h1>
+                    <p class="text-sm md:text-xl mb-2 md:mb-4 line-clamp-2 md:line-clamp-none"><?= substr($item['overview'], 0, 150) ?>...</p>
+                    <a href="/Cinetech/detail/<?= $item['media_type'] ?>/<?= $item['id'] ?>" class="inline-block px-4 py-2 md:px-6 md:py-3 bg-red-600 text-white rounded text-sm md:text-base hover:bg-red-700 transition duration-300">Voir Détails</a>
                 </div>
             </div>
         <?php endforeach; ?>
     </section>
     
     <!-- Trending Section -->
-    <section class="mb-12 px-8">
-        <h2 class="text-3xl font-semibold mb-4 text-white">Tendances</h2>
-        <div class="flex overflow-x-auto space-x-4 pb-4">
+    <section class="mb-8 md:mb-12 px-4 md:px-8">
+        <h2 class="text-2xl md:text-3xl font-semibold mb-4 text-white">Tendances</h2>
+        <div class="flex overflow-x-auto space-x-3 md:space-x-4 pb-4">
             <?php foreach (array_slice($trendingItems, 0, 10) as $item): ?>
-                <div class="flex-none w-48 transition-transform duration-300 hover:scale-105">
+                <div class="flex-none w-36 md:w-48 transition-transform duration-300 hover:scale-105">
                     <a href="/Cinetech/detail/<?= $item['media_type'] ?>/<?= $item['id'] ?>" class="block">
-                        <img src="<?= $item['poster_path'] ? (new \App\Services\TMDBApi())->getImageUrl($item['poster_path']) : "./public/img/placeholder_trending.jpg" ?>" alt="<?= htmlspecialchars($item['title'] ?? $item['name']) ?>" class="w-full h-72 object-cover rounded">
+                        <img src="<?= $item['poster_path'] ? (new \App\Services\TMDBApi())->getImageUrl($item['poster_path']) : "./public/img/placeholder_trending.jpg" ?>" alt="<?= htmlspecialchars($item['title'] ?? $item['name']) ?>" class="w-full h-52 md:h-72 object-cover rounded">
                         <div class="mt-2">
-                            <h3 class="text-lg font-semibold text-white truncate"><?= htmlspecialchars($item['title'] ?? $item['name']) ?></h3>
-                            <p class="text-sm text-gray-400"><?= substr($item['release_date'] ?? $item['first_air_date'], 0, 4) ?></p>
+                            <h3 class="text-sm md:text-lg font-semibold text-white truncate"><?= htmlspecialchars($item['title'] ?? $item['name']) ?></h3>
+                            <p class="text-xs md:text-sm text-gray-400"><?= substr($item['release_date'] ?? $item['first_air_date'], 0, 4) ?></p>
                         </div>
                     </a>
                     <div class="flex justify-end items-center mt-2">

@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/src/Lang/helpers.php';
 
 use App\Router;
 use App\Controllers\HomeController;
@@ -12,6 +13,7 @@ use App\Controllers\DetailController;
 use App\Controllers\SearchController;
 use App\Controllers\ProfileController;
 use App\Controllers\CommentController;
+use App\Controllers\LanguageController;
 
 $router = new Router();
 
@@ -47,6 +49,9 @@ $router->add('logout', LoginController::class, 'logout');
 // Routes pour voir tous les commentaires
 $router->add('comments/:mediaType/:id', CommentController::class, 'showAllComments');
 $router->add('allComments/:mediaType/:id', CommentController::class, 'showAllComments');
+
+// Route pour changer la langue
+$router->add('language/change/:lang', LanguageController::class, 'changeLanguage');
 
 // Obtenir le chemin URL actuel
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
