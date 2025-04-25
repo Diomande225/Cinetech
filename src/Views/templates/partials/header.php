@@ -93,8 +93,7 @@ if (isset($_SESSION['user_id'])) {
                     <div class="relative inline-block text-left">
                         <div>
                             <button type="button" id="language-menu-button" class="inline-flex items-center justify-center w-full rounded-md px-2 py-1 bg-gray-800 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none">
-                                <i class="fas fa-globe mr-1"></i>
-                                <span class="hidden md:inline"><?= __('language') ?></span>
+                                <i class="fas fa-globe"></i>
                                 <svg class="h-4 w-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
@@ -112,17 +111,30 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                     
                     <?php if (isset($_SESSION['username'])): ?>
-                        <span class="text-white"><?= __('hello') ?>, <?= htmlspecialchars($_SESSION['username']) ?></span>
-                        <?php if ($isAdmin): ?>
-                            <a href="<?php echo $basePath; ?>/admin" class="text-yellow-400 hover:text-yellow-300">
-                                <i class="fas fa-crown"></i>
-                                <span class="hidden md:inline ml-1">Admin</span>
-                            </a>
-                        <?php endif; ?>
-                        <a href="<?php echo $basePath; ?>/profile" class="text-white hover:text-gray-300"><?= __('profile') ?></a>
-                        <a href="<?php echo $basePath; ?>/logout" class="text-red-600 hover:underline"><?= __('logout') ?></a>
+                        <!-- User Dropdown Menu -->
+                        <div class="relative inline-block text-left">
+                            <div>
+                                <button type="button" id="user-menu-button" class="inline-flex items-center justify-center rounded-md px-2 py-1 text-sm font-medium text-white hover:text-gray-300 focus:outline-none">
+                                    <?= htmlspecialchars($_SESSION['username']) ?>
+                                    <svg class="h-4 w-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
+                                <div class="py-1">
+                                    <?php if ($isAdmin): ?>
+                                    <a href="<?php echo $basePath; ?>/admin" class="block px-4 py-2 text-sm text-yellow-400 hover:bg-gray-700">
+                                        <i class="fas fa-crown mr-1"></i> Admin
+                                    </a>
+                                    <?php endif; ?>
+                                    <a href="<?php echo $basePath; ?>/profile" class="block px-4 py-2 text-sm text-white hover:bg-gray-700"><?= __('profile') ?></a>
+                                    <a href="<?php echo $basePath; ?>/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-700"><?= __('logout') ?></a>
+                                </div>
+                            </div>
+                        </div>
                     <?php else: ?>
-                        <a href="<?php echo $basePath; ?>/login" class="hidden md:block px-4 py-1 bg-red-600 text-white rounded-sm hover:bg-red-700 transition duration-300 text-sm font-medium"><?= __('login') ?></a>
+                        <a href="<?php echo $basePath; ?>/login" class="px-4 py-1 bg-red-600 text-white rounded-sm hover:bg-red-700 transition duration-300 text-sm font-medium"><?= __('login') ?></a>
                     <?php endif; ?>
                 </div>
 
@@ -184,6 +196,23 @@ if (isset($_SESSION['user_id'])) {
             document.addEventListener('click', (event) => {
                 if (!languageMenuButton.contains(event.target) && !languageMenu.contains(event.target)) {
                     languageMenu.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Script pour le menu utilisateur
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
+        
+        if (userMenuButton && userMenu) {
+            userMenuButton.addEventListener('click', () => {
+                userMenu.classList.toggle('hidden');
+            });
+            
+            // Fermer le menu utilisateur lors d'un clic à l'extérieur
+            document.addEventListener('click', (event) => {
+                if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                    userMenu.classList.add('hidden');
                 }
             });
         }
