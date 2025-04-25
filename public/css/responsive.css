@@ -22,37 +22,15 @@ header.fixed {
 }
 
 header.fixed.scrolled {
-    background-color: rgba(0, 0, 0, 0.95) !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-/* Menu mobile amélioré */
-#mobile-menu {
-    position: absolute;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.95);
-    z-index: 40;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid #333;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-#mobile-menu a {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    display: block;
-}
-
-#mobile-menu a:last-child {
-    border-bottom: none;
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
 /* Adaptation de la barre de recherche sur mobile */
 @media (max-width: 768px) {
     .search-container {
-        display: none;
+        width: 100%;
+        max-width: none;
+        margin: 10px 0;
     }
     
     .netflix-logo {
@@ -92,6 +70,20 @@ header.fixed.scrolled {
     /* Adaptation des sections de détail */
     .detail-page .col-span-2 {
         grid-column: span 1 !important;
+    }
+    
+    /* Augmenter la taille des boutons et liens sur mobile pour meilleure accessibilité */
+    .bottom-nav .flex-col {
+        padding: 8px 0;
+    }
+    
+    .bottom-nav i {
+        font-size: 1.5rem;
+    }
+    
+    /* Espacement pour le contenu principal sur mobile */
+    main {
+        padding-top: 80px;
     }
 }
 
@@ -161,5 +153,53 @@ header.fixed.scrolled {
     form button {
         width: 100% !important;
         margin-top: 0.5rem;
+    }
+}
+
+/* Styles pour la barre de navigation inférieure */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    background-color: #000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Styles pour les icônes de la barre de navigation inférieure */
+.bottom-nav-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    transition: all 0.3s ease;
+}
+
+.bottom-nav-icon:hover {
+    color: #ef4444; /* Tailwind red-500 */
+}
+
+/* Padding pour le contenu principal pour éviter qu'il soit caché par la navbar fixe du bas */
+@media (max-width: 767px) {
+    .main-content {
+        padding-bottom: 80px;
+    }
+}
+
+/* Amélioration des menus déroulants sur mobile */
+@media (max-width: 768px) {
+    #language-menu, #user-menu {
+        width: 100%;
+        left: 0;
+        right: 0;
+        border-radius: 0;
+    }
+}
+
+/* Styles spécifiques pour le mode desktop */
+@media (min-width: 768px) {
+    .search-container {
+        max-width: 400px;
     }
 } 

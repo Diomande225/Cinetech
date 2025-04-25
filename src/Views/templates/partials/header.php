@@ -45,7 +45,7 @@ if (isset($_SESSION['user_id'])) {
         }
     </style>
 </head>
-<body class="bg-black text-white" 
+<body class="bg-black text-white main-content" 
     data-base-path="<?php echo $basePath; ?>"
     data-translation-search-in-progress="<?= __('search_in_progress') ?>"
     data-translation-no-results="<?= __('no_results') ?>"
@@ -61,7 +61,7 @@ if (isset($_SESSION['user_id'])) {
                     <span class="netflix-logo text-4xl font-bold text-red-600 hover:text-red-500 transition duration-300">CINETECH</span>
                 </a>
 
-                <!-- Navigation Links -->
+                <!-- Navigation Links - Only visible on desktop -->
                 <div class="hidden md:flex space-x-6">
                     <a href="<?php echo $basePath; ?>/movies" class="text-white hover:text-gray-300"><?= __('movies') ?></a>
                     <a href="<?php echo $basePath; ?>/tvseries" class="text-white hover:text-gray-300"><?= __('tvseries') ?></a>
@@ -69,7 +69,7 @@ if (isset($_SESSION['user_id'])) {
                 </div>
 
                 <!-- Search Bar with Autocomplete -->
-                <div class="relative flex-1 max-w-xs mx-4 search-container">
+                <div class="relative flex-1 max-w-md mx-4 search-container">
                     <input 
                         type="text" 
                         id="search-input"
@@ -137,52 +137,11 @@ if (isset($_SESSION['user_id'])) {
                         <a href="<?php echo $basePath; ?>/login" class="px-4 py-1 bg-red-600 text-white rounded-sm hover:bg-red-700 transition duration-300 text-sm font-medium"><?= __('login') ?></a>
                     <?php endif; ?>
                 </div>
-
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="md:hidden text-white">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="md:hidden hidden mt-4">
-                <div class="mb-4">
-                    <input 
-                        type="text" 
-                        id="mobile-search-input"
-                        placeholder="<?= __('search') ?>" 
-                        class="w-full py-2 px-4 bg-opacity-50 bg-gray-700 text-white rounded-full border-none focus:outline-none focus:ring-2 focus:ring-white"
-                    />
-                </div>
-                <a href="<?php echo $basePath; ?>/movies" class="block py-2 text-white hover:text-gray-300"><?= __('movies') ?></a>
-                <a href="<?php echo $basePath; ?>/tvseries" class="block py-2 text-white hover:text-gray-300"><?= __('tvseries') ?></a>
-                <a href="<?php echo $basePath; ?>/favoris" class="block py-2 text-white hover:text-gray-300"><?= __('favorites') ?></a>
-                <?php if ($isAdmin): ?>
-                    <a href="<?php echo $basePath; ?>/admin" class="block py-2 text-yellow-400 hover:text-yellow-300 font-bold">
-                        <i class="fas fa-crown mr-1"></i> Admin
-                    </a>
-                <?php endif; ?>
-                <?php if (isset($_SESSION['username'])): ?>
-                    <a href="<?php echo $basePath; ?>/profile" class="block py-2 text-white hover:text-gray-300"><?= __('profile') ?></a>
-                    <a href="<?php echo $basePath; ?>/logout" class="block py-2 text-red-600 hover:underline"><?= __('logout') ?></a>
-                <?php else: ?>
-                    <a href="<?php echo $basePath; ?>/login" class="block py-2 text-white hover:text-gray-300"><?= __('login') ?></a>
-                <?php endif; ?>
             </div>
         </nav>
     </header>
 
     <script>
-        // Script pour le menu mobile
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        
         // Script pour le sélecteur de langue
         const languageMenuButton = document.getElementById('language-menu-button');
         const languageMenu = document.getElementById('language-menu');
@@ -217,53 +176,8 @@ if (isset($_SESSION['user_id'])) {
             });
         }
         
-        // Script pour synchroniser la barre de recherche mobile avec celle du bureau
+        // Script pour l'effet de scroll sur la navigation
         document.addEventListener('DOMContentLoaded', function() {
-            const mobileSearchInput = document.getElementById('mobile-search-input');
-            const desktopSearchInput = document.getElementById('search-input');
-            
-            if (mobileSearchInput && desktopSearchInput) {
-                // Synchroniser les entrées
-                mobileSearchInput.addEventListener('input', function() {
-                    desktopSearchInput.value = this.value;
-                    // Déclencher l'événement input sur la recherche de bureau pour activer la recherche
-                    desktopSearchInput.dispatchEvent(new Event('input'));
-                });
-                
-                // Afficher les résultats de recherche mobile
-                const searchResults = document.getElementById('search-results');
-                if (searchResults) {
-                    const mobileSearchResults = searchResults.cloneNode(true);
-                    mobileSearchResults.id = 'mobile-search-results';
-                    mobileSearchResults.classList.add('w-full', 'mt-2');
-                    mobileSearchInput.parentNode.appendChild(mobileSearchResults);
-                    
-                    // Observer les changements dans les résultats de recherche du bureau
-                    const observer = new MutationObserver(function(mutations) {
-                        mutations.forEach(function(mutation) {
-                            if (mutation.type === 'childList' || mutation.type === 'attributes') {
-                                // Copier le contenu
-                                mobileSearchResults.innerHTML = searchResults.innerHTML;
-                                
-                                // Afficher si le bureau est visible et a du contenu
-                                if (!searchResults.classList.contains('hidden') && searchResults.children.length > 0) {
-                                    mobileSearchResults.classList.remove('hidden');
-                                } else {
-                                    mobileSearchResults.classList.add('hidden');
-                                }
-                            }
-                        });
-                    });
-                    
-                    observer.observe(searchResults, { 
-                        attributes: true, 
-                        childList: true, 
-                        subtree: true 
-                    });
-                }
-            }
-            
-            // Script pour l'effet de scroll sur la navigation
             const header = document.querySelector('header.fixed');
             if (header) {
                 window.addEventListener('scroll', function() {
