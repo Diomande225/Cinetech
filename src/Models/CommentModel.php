@@ -104,6 +104,32 @@ class CommentModel {
         }
     }
 
+    /**
+     * Récupère tous les commentaires pour l'administration
+     * 
+     * @return array Liste de tous les commentaires avec leurs détails
+     */
+    public function getAllCommentsWithDetails() {
+        try {
+            $query = "SELECT c.*, u.username,
+                      CASE 
+                        WHEN c.item_type = 'movie' THEN 'Film'
+                        ELSE 'Série' 
+                      END as content_type
+                      FROM comments c
+                      LEFT JOIN users u ON c.user_id = u.id
+                      ORDER BY c.created_at DESC";
+            
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            error_log("Erreur lors de la récupération des commentaires (admin): " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function getDb() {
         return $this->db;
     }

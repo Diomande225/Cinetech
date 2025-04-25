@@ -7,6 +7,21 @@ $basePath = '/Cinetech';
 
 // Initialiser la langue
 require_once __DIR__ . '/../../../../src/Lang/helpers.php';
+
+// Vérifier si l'utilisateur est administrateur
+$isAdmin = false;
+if (isset($_SESSION['user_id'])) {
+    try {
+        $db = \App\Database\Connection::getInstance();
+        $query = "SELECT * FROM admin WHERE user_id = :userId";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':userId', $_SESSION['user_id'], \PDO::PARAM_INT);
+        $stmt->execute();
+        $isAdmin = $stmt->rowCount() > 0;
+    } catch (\Exception $e) {
+        // Ne rien faire en cas d'erreur
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?= getCurrentLanguage() ?>">
@@ -98,6 +113,12 @@ require_once __DIR__ . '/../../../../src/Lang/helpers.php';
                     
                     <?php if (isset($_SESSION['username'])): ?>
                         <span class="text-white"><?= __('hello') ?>, <?= htmlspecialchars($_SESSION['username']) ?></span>
+                        <?php if ($isAdmin): ?>
+                            <a href="<?php echo $basePath; ?>/admin" class="text-yellow-400 hover:text-yellow-300">
+                                <i class="fas fa-crown"></i>
+                                <span class="hidden md:inline ml-1">Admin</span>
+                            </a>
+                        <?php endif; ?>
                         <a href="<?php echo $basePath; ?>/profile" class="text-white hover:text-gray-300"><?= __('profile') ?></a>
                         <a href="<?php echo $basePath; ?>/logout" class="text-red-600 hover:underline"><?= __('logout') ?></a>
                     <?php else: ?>
@@ -126,6 +147,11 @@ require_once __DIR__ . '/../../../../src/Lang/helpers.php';
                 <a href="<?php echo $basePath; ?>/movies" class="block py-2 text-white hover:text-gray-300"><?= __('movies') ?></a>
                 <a href="<?php echo $basePath; ?>/tvseries" class="block py-2 text-white hover:text-gray-300"><?= __('tvseries') ?></a>
                 <a href="<?php echo $basePath; ?>/favoris" class="block py-2 text-white hover:text-gray-300"><?= __('favorites') ?></a>
+                <?php if ($isAdmin): ?>
+                    <a href="<?php echo $basePath; ?>/admin" class="block py-2 text-yellow-400 hover:text-yellow-300 font-bold">
+                        <i class="fas fa-crown mr-1"></i> Admin
+                    </a>
+                <?php endif; ?>
                 <?php if (isset($_SESSION['username'])): ?>
                     <a href="<?php echo $basePath; ?>/profile" class="block py-2 text-white hover:text-gray-300"><?= __('profile') ?></a>
                     <a href="<?php echo $basePath; ?>/logout" class="block py-2 text-red-600 hover:underline"><?= __('logout') ?></a>

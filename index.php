@@ -14,6 +14,7 @@ use App\Controllers\SearchController;
 use App\Controllers\ProfileController;
 use App\Controllers\CommentController;
 use App\Controllers\LanguageController;
+use App\Controllers\AdminController;
 
 $router = new Router();
 
@@ -52,6 +53,10 @@ $router->add('allComments/:mediaType/:id', CommentController::class, 'showAllCom
 
 // Route pour changer la langue
 $router->add('language/change/:lang', LanguageController::class, 'changeLanguage');
+
+// Routes pour l'administration
+$router->add('admin', AdminController::class, 'dashboard');
+$router->add('admin/comments/delete/:id', AdminController::class, 'deleteComment');
 
 // Obtenir le chemin URL actuel
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
