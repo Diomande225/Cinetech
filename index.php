@@ -57,6 +57,9 @@ $router->add('language/change/:lang', LanguageController::class, 'changeLanguage
 // Routes pour l'administration
 $router->add('admin', AdminController::class, 'dashboard');
 $router->add('admin/comments/delete/:id', AdminController::class, 'deleteComment');
+$router->add('admin/users/activate/:id', AdminController::class, 'activateUser');
+$router->add('admin/users/deactivate/:id', AdminController::class, 'deactivateUser');
+$router->add('admin/users/delete/:id', AdminController::class, 'deleteUser');
 
 // Obtenir le chemin URL actuel
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

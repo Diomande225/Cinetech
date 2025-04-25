@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Models\AdminModel;
 use App\Models\CommentModel;
+use App\Models\User;
 
 class AdminController extends BaseController {
     private $adminModel;
@@ -27,11 +28,16 @@ class AdminController extends BaseController {
         // Récupérer les commentaires pour l'administration
         $comments = $this->commentModel->getAllCommentsWithDetails();
         
+        // Récupérer tous les utilisateurs
+        $users = User::getAllUsers();
+        
         // Préparer les données pour la vue
         $viewData = [
             'title' => 'Tableau de bord d\'administration - Cinetech',
             'comments' => $comments,
-            'basePath' => '/Cinetech'
+            'users' => $users,
+            'basePath' => '/Cinetech',
+            'activeTab' => $_GET['tab'] ?? 'users'
         ];
         
         // Afficher la vue
@@ -59,6 +65,72 @@ class AdminController extends BaseController {
         $this->jsonResponse([
             'success' => $success,
             'message' => $success ? 'Commentaire supprimé avec succès' : 'Erreur lors de la suppression'
+        ]);
+    }
+    
+    /**
+     * Active un compte utilisateur
+     */
+    public function activateUser($userId) {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            $this->jsonResponse(['success' => false, 'message' => 'Non autorisé']);
+            return;
+        }
+        
+        // Activer l'utilisateur
+        $success = User::activateUser($userId);
+        
+        // Renvoyer la réponse
+        $this->jsonResponse([
+            'success' => $success,
+            'message' => $success ? 'Utilisateur activé avec succès' : 'Erreur lors de l\'activation'
+        ]);
+    }
+    
+    /**
+     * Désactive un compte utilisateur
+     */
+    public function deactivateUser($userId) {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            $this->jsonResponse(['success' => false, 'message' => 'Non autorisé']);
+            return;
+        }
+        
+        // Désactiver l'utilisateur
+        $success = User::deactivateUser($userId);
+        
+        // Renvoyer la réponse
+        $this->jsonResponse([
+            'success' => $success,
+            'message' => $success ? 'Utilisateur désactivé avec succès' : 'Erreur lors de la désactivation'
+        ]);
+    }
+    
+    /**
+     * Supprime un compte utilisateur
+     */
+    public function deleteUser($userId) {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            $this->jsonResponse(['success' => false, 'message' => 'Non autorisé']);
+            return;
+        }
+        
+        // Empêcher la suppression de son propre compte
+        if ($userId == $_SESSION['user_id']) {
+            $this->jsonResponse(['success' => false, 'message' => 'Vous ne pouvez pas supprimer votre propre compte']);
+            return;
+        }
+        
+        // Supprimer l'utilisateur
+        $success = User::deleteUser($userId);
+        
+        // Renvoyer la réponse
+        $this->jsonResponse([
+            'success' => $success,
+            'message' => $success ? 'Utilisateur supprimé avec succès' : 'Erreur lors de la suppression'
         ]);
     }
     
