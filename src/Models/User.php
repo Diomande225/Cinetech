@@ -7,11 +7,16 @@ class User {
     public static function create($username, $email, $password) {
         $db = Connection::getInstance();
         $stmt = $db->prepare("INSERT INTO users (username, email, password, is_active) VALUES (:username, :email, :password, 1)");
-        $stmt->execute([
-            ':username' => $username,
-            ':email' => $email,
-            ':password' => password_hash($password, PASSWORD_BCRYPT),
-        ]);
+        try {
+            $stmt->execute([
+                ':username' => $username,
+                ':email' => $email,
+                ':password' => password_hash($password, PASSWORD_BCRYPT),
+            ]);
+            return ['success' => true, 'user_id' => $db->lastInsertId()];
+        } catch (\PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
     }
 
     public static function findByEmail($email) {

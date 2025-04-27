@@ -45,6 +45,12 @@
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h2 class="text-xl font-semibold mb-4">Gestion des utilisateurs</h2>
                 
+                <div class="mb-4">
+                    <button id="add-user-button" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i> Ajouter un utilisateur
+                    </button>
+                </div>
+                
                 <?php if (empty($viewData['users'])): ?>
                     <div class="bg-gray-100 p-4 rounded text-center">
                         <p>Aucun utilisateur à afficher.</p>
@@ -203,6 +209,50 @@
                     <div class="flex justify-end pt-2">
                         <button type="button" class="modal-close px-4 bg-gray-500 text-white rounded-lg py-2 mr-2">Annuler</button>
                         <button type="submit" class="px-4 bg-blue-500 text-white rounded-lg py-2">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal d'ajout d'utilisateur -->
+    <div id="add-user-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="modal-overlay absolute inset-0 bg-black opacity-50"></div>
+        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!-- En-tête -->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold text-gray-800">Ajouter un utilisateur</p>
+                    <div class="modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-gray-600" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9l4.47-4.47z"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Formulaire -->
+                <form id="add-user-form">
+                    <div class="mb-4">
+                        <label for="add-username" class="block text-gray-700 text-sm font-bold mb-2">Nom d'utilisateur</label>
+                        <input type="text" id="add-username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <p class="text-red-500 text-xs italic hidden" id="add-username-error"></p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="add-email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                        <input type="email" id="add-email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <p class="text-red-500 text-xs italic hidden" id="add-email-error"></p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="add-password" class="block text-gray-700 text-sm font-bold mb-2">Mot de passe</label>
+                        <input type="password" id="add-password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <p class="text-red-500 text-xs italic hidden" id="add-password-error"></p>
+                    </div>
+                    
+                    <div class="flex justify-end pt-2">
+                        <button type="button" class="modal-close px-4 bg-gray-500 text-white rounded-lg py-2 mr-2">Annuler</button>
+                        <button type="submit" class="px-4 bg-green-500 text-white rounded-lg py-2">Créer</button>
                     </div>
                 </form>
             </div>
@@ -432,6 +482,230 @@
                             });
                         } else {
                             showNotification(data.message || 'Erreur lors de la mise à jour', 'error');
+                        }
+                    }
+                })
+                .catch(error => {
+                    showNotification('Erreur de communication avec le serveur', 'error');
+                    console.error('Error:', error);
+                });
+            });
+            
+            // Gestion de l'ajout d'utilisateur
+            const addUserButton = document.getElementById('add-user-button');
+            const addUserModal = document.getElementById('add-user-modal');
+            const addUserForm = document.getElementById('add-user-form');
+            const addUsername = document.getElementById('add-username');
+            const addEmail = document.getElementById('add-email');
+            const addPassword = document.getElementById('add-password');
+            const addUsernameError = document.getElementById('add-username-error');
+            const addEmailError = document.getElementById('add-email-error');
+            const addPasswordError = document.getElementById('add-password-error');
+            
+            // Ouvrir le modal d'ajout
+            addUserButton.addEventListener('click', function() {
+                // Réinitialiser le formulaire
+                addUserForm.reset();
+                
+                // Réinitialiser les erreurs
+                addUsernameError.classList.add('hidden');
+                addEmailError.classList.add('hidden');
+                addPasswordError.classList.add('hidden');
+                
+                // Afficher le modal
+                addUserModal.classList.remove('hidden');
+            });
+            
+            // Fermer le modal d'ajout (pour tous les boutons de fermeture)
+            addUserModal.querySelectorAll('.modal-close').forEach(button => {
+                button.addEventListener('click', function() {
+                    addUserModal.classList.add('hidden');
+                });
+            });
+            
+            // Gestion du clic en dehors du modal pour le fermer
+            addUserModal.addEventListener('click', function(event) {
+                if (event.target === addUserModal) {
+                    addUserModal.classList.add('hidden');
+                }
+            });
+            
+            // Soumission du formulaire d'ajout
+            addUserForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Réinitialiser les erreurs
+                addUsernameError.classList.add('hidden');
+                addEmailError.classList.add('hidden');
+                addPasswordError.classList.add('hidden');
+                
+                // Récupérer les données du formulaire
+                const username = addUsername.value.trim();
+                const email = addEmail.value.trim();
+                const password = addPassword.value.trim();
+                
+                // Envoyer les données
+                fetch('<?= $viewData['basePath'] ?>/admin/users/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Fermer le modal
+                        addUserModal.classList.add('hidden');
+                        
+                        // Afficher la notification de succès
+                        showNotification('Utilisateur créé avec succès', 'success');
+                        
+                        // Ajouter l'utilisateur au tableau
+                        const userTable = document.querySelector('#users-section table tbody');
+                        if (userTable) {
+                            const newRow = document.createElement('tr');
+                            newRow.className = 'hover:bg-gray-50';
+                            newRow.dataset.userId = data.user.id;
+                            
+                            newRow.innerHTML = `
+                                <td class="px-4 py-3">${data.user.id}</td>
+                                <td class="px-4 py-3 font-medium">${username}</td>
+                                <td class="px-4 py-3">${email}</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Actif</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">Utilisateur</span>
+                                </td>
+                                <td class="px-4 py-3 text-sm">${new Date().toLocaleDateString('fr-FR')}</td>
+                                <td class="px-4 py-3">
+                                    <div class="flex space-x-2">
+                                        <button class="deactivate-user text-yellow-600 hover:text-yellow-900" title="Désactiver">
+                                            <i class="fas fa-user-slash"></i>
+                                        </button>
+                                        <button class="edit-user text-blue-600 hover:text-blue-900" title="Modifier" data-user-id="${data.user.id}">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="delete-user text-red-600 hover:text-red-900" title="Supprimer">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            `;
+                            
+                            userTable.appendChild(newRow);
+                            
+                            // Attacher les écouteurs d'événements aux nouveaux boutons
+                            const newDeactivateButton = newRow.querySelector('.deactivate-user');
+                            const newEditButton = newRow.querySelector('.edit-user');
+                            const newDeleteButton = newRow.querySelector('.delete-user');
+                            
+                            if (newDeactivateButton) {
+                                newDeactivateButton.addEventListener('click', function() {
+                                    const userId = this.closest('tr').dataset.userId;
+                                    if (confirm('Êtes-vous sûr de vouloir désactiver cet utilisateur ?')) {
+                                        fetch('<?= $viewData['basePath'] ?>/admin/users/deactivate/' + userId, {
+                                            method: 'POST'
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                showNotification('Utilisateur désactivé avec succès', 'success');
+                                                setTimeout(() => { window.location.reload(); }, 1500);
+                                            } else {
+                                                showNotification(data.message || 'Erreur lors de la désactivation', 'error');
+                                            }
+                                        })
+                                        .catch(error => {
+                                            showNotification('Erreur de communication avec le serveur', 'error');
+                                            console.error('Error:', error);
+                                        });
+                                    }
+                                });
+                            }
+                            
+                            if (newEditButton) {
+                                newEditButton.addEventListener('click', function() {
+                                    const userId = this.dataset.userId;
+                                    
+                                    // Réinitialiser les erreurs
+                                    usernameError.classList.add('hidden');
+                                    emailError.classList.add('hidden');
+                                    
+                                    // Récupérer les données de l'utilisateur
+                                    fetch('<?= $viewData['basePath'] ?>/admin/users/details/' + userId)
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                // Remplir le formulaire
+                                                editUserId.value = data.user.id;
+                                                editUsername.value = data.user.username;
+                                                editEmail.value = data.user.email;
+                                                
+                                                // Afficher le modal
+                                                editUserModal.classList.remove('hidden');
+                                            } else {
+                                                showNotification(data.message || 'Erreur lors de la récupération des données', 'error');
+                                            }
+                                        })
+                                        .catch(error => {
+                                            showNotification('Erreur de communication avec le serveur', 'error');
+                                            console.error('Error:', error);
+                                        });
+                                });
+                            }
+                            
+                            if (newDeleteButton) {
+                                newDeleteButton.addEventListener('click', function() {
+                                    const userRow = this.closest('tr');
+                                    const userId = userRow.dataset.userId;
+                                    
+                                    if (confirm('ATTENTION: Êtes-vous sûr de vouloir supprimer définitivement cet utilisateur ? Cette action est irréversible et supprimera également tous ses commentaires et favoris.')) {
+                                        fetch('<?= $viewData['basePath'] ?>/admin/users/delete/' + userId, {
+                                            method: 'POST'
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                userRow.remove();
+                                                showNotification('Utilisateur supprimé avec succès', 'success');
+                                            } else {
+                                                showNotification(data.message || 'Erreur lors de la suppression', 'error');
+                                            }
+                                        })
+                                        .catch(error => {
+                                            showNotification('Erreur de communication avec le serveur', 'error');
+                                            console.error('Error:', error);
+                                        });
+                                    }
+                                });
+                            }
+                        } else {
+                            // Si aucun tableau n'existe, recharger la page
+                            setTimeout(() => { window.location.reload(); }, 1500);
+                        }
+                    } else {
+                        // Afficher les erreurs
+                        if (data.errors) {
+                            data.errors.forEach(error => {
+                                if (error.includes('nom d\'utilisateur')) {
+                                    addUsernameError.textContent = error;
+                                    addUsernameError.classList.remove('hidden');
+                                } else if (error.includes('email')) {
+                                    addEmailError.textContent = error;
+                                    addEmailError.classList.remove('hidden');
+                                } else if (error.includes('mot de passe')) {
+                                    addPasswordError.textContent = error;
+                                    addPasswordError.classList.remove('hidden');
+                                }
+                            });
+                        } else {
+                            showNotification(data.message || 'Erreur lors de la création', 'error');
                         }
                     }
                 })

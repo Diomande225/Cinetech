@@ -242,4 +242,74 @@ class AdminController extends BaseController {
             $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la mise à jour']);
         }
     }
+    
+    /**
+     * Crée un nouvel utilisateur
+     */
+    public function createUser() {
+        // Vérifier si l'utilisateur est admin
+        if (!$this->isAdmin()) {
+            $this->jsonResponse(['success' => false, 'message' => 'Non autorisé']);
+            return;
+        }
+        
+        // Récupérer les données du formulaire
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$data) {
+            $this->jsonResponse(['success' => false, 'message' => 'Données invalides']);
+            return;
+        }
+        
+        // Valider les données
+        $username = $data['username'] ?? '';
+        $email = $data['email'] ?? '';
+        $password = $data['password'] ?? '';
+        $errors = [];
+        
+        if (empty($username)) {
+            $errors[] = 'Le nom d\'utilisateur est requis';
+        } elseif (User::usernameExists($username)) {
+            $errors[] = 'Ce nom d\'utilisateur est déjà utilisé';
+        }
+        
+        if (empty($email)) {
+            $errors[] = 'L\'email est requis';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'L\'email n\'est pas valide';
+        } elseif (User::emailExists($email)) {
+            $errors[] = 'Cet email est déjà utilisé';
+        }
+        
+        if (empty($password)) {
+            $errors[] = 'Le mot de passe est requis';
+        } elseif (strlen($password) < 6) {
+            $errors[] = 'Le mot de passe doit contenir au moins 6 caractères';
+        }
+        
+        if (!empty($errors)) {
+            $this->jsonResponse(['success' => false, 'errors' => $errors]);
+            return;
+        }
+        
+        // Créer l'utilisateur
+        $result = User::create($username, $email, $password);
+        
+        if ($result['success']) {
+            $this->jsonResponse([
+                'success' => true, 
+                'message' => 'Utilisateur créé avec succès',
+                'user' => [
+                    'id' => $result['user_id'],
+                    'username' => $username,
+                    'email' => $email,
+                    'is_active' => 1,
+                    'is_admin' => 0,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]
+            ]);
+        } else {
+            $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la création de l\'utilisateur: ' . ($result['error'] ?? 'Erreur inconnue')]);
+        }
+    }
 } 
