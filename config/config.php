@@ -1,44 +1,19 @@
 <?php
-// Configuration de l'environnement
-define('ENV', 'development'); // ou 'production'
 
-// Configuration de l'application
-define('APP_NAME', 'La Cinétech');
-define('APP_URL', 'http://localhost'); // Modifier selon votre environnement
-
-// Configuration des sessions
-ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30); // 30 jours
-ini_set('session.gc_maxlifetime', 60 * 60 * 24 * 30);
-session_start();
-
-// Gestion des erreurs
-if (ENV === 'development') {
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-} else {
-    error_reporting(0);
-    ini_set('display_errors', 0);
-}
-
-// Fuseau horaire
-date_default_timezone_set('Europe/Paris');
-
-// Fonctions d'autoload
-spl_autoload_register(function ($class) {
-    $paths = [
-        'controllers/',
-        'models/',
-        'services/'
-    ];
-
-    foreach ($paths as $path) {
-        $file = __DIR__ . '/../' . $path . $class . '.php';
-        if (file_exists($file)) {
-            require_once $file;
-            return;
-        }
-    }
-});
-
-// Fonctions utilitaires globales
-require_once __DIR__ . '/../utils/helpers.php'; 
+return [
+    
+    'db' => [
+        'host' => 'localhost',
+        'dbname' => 'cinetech',
+        'user' => 'root',
+        'password' => '',
+        'charset' => 'utf8mb4'
+    ],
+    
+    'tmdb' => [
+        'api_key' => 'c21ac6ce8a090027847698c1f58d5a71',
+        'access_token' => 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMjFhYzZjZThhMDkwMDI3ODQ3Njk4YzFmNThkNWE3MSIsIm5iZiI6MTczMTY4MjQwOS43NzYzODY3LCJzdWIiOiI2NzI4YzAzNDM5NDBjMTIwMmZmN2NlYTciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.3jgDDgb1xORjCSRWR8tWhsXMX3OV8wiu4OyZwd6DClw',
+        'base_url' => 'https://api.themoviedb.org/3',
+        'image_base_url' => 'https://image.tmdb.org/t/p/'
+    ]
+];

@@ -1,0 +1,205 @@
+/* Fichier CSS pour la responsivité du site Cinetech */
+
+/* Règles générales pour tous les appareils */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Navigation responsive avec effet de scroll */
+header.fixed {
+    transition: background-color 0.3s ease;
+}
+
+header.fixed.scrolled {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Adaptation de la barre de recherche sur mobile */
+@media (max-width: 768px) {
+    .search-container {
+        width: 100%;
+        max-width: none;
+        margin: 10px 0;
+    }
+    
+    .netflix-logo {
+        font-size: 2rem !important;
+    }
+    
+    /* Bannière adaptée pour mobile */
+    #featured-banner {
+        height: 50vh !important;
+    }
+    
+    #featured-banner h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    #featured-banner p {
+        font-size: 1rem !important;
+    }
+    
+    /* Ajuster l'espacement sur mobile */
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Ajustement de la taille des favoris */
+    .favori-button i {
+        font-size: 2rem !important;
+    }
+    
+    /* Adaptation des grilles */
+    .favoris-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+        gap: 0.75rem !important;
+    }
+    
+    /* Adaptation des sections de détail */
+    .detail-page .col-span-2 {
+        grid-column: span 1 !important;
+    }
+    
+    /* Augmenter la taille des boutons et liens sur mobile pour meilleure accessibilité */
+    .bottom-nav .flex-col {
+        padding: 8px 0;
+    }
+    
+    .bottom-nav i {
+        font-size: 1.5rem;
+    }
+    
+    /* Espacement pour le contenu principal sur mobile */
+    main {
+        padding-top: 80px;
+    }
+}
+
+/* Tablettes */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .favoris-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+    }
+    
+    .netflix-logo {
+        font-size: 3rem !important;
+    }
+}
+
+/* Adaptation du défilement horizontal sur mobile */
+.flex.overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Pour Firefox */
+    padding-bottom: 1rem;
+}
+
+.flex.overflow-x-auto::-webkit-scrollbar {
+    display: none; /* Pour Chrome, Safari et Opera */
+}
+
+/* Améliorations spécifiques pour les cartes et éléments d'affichage */
+@media (max-width: 640px) {
+    /* Réduction de la taille des cartes sur très petits écrans */
+    .flex-none.w-48 {
+        width: 120px !important;
+    }
+    
+    /* Ajustement de la grille pour les similaires */
+    .grid.grid-cols-2.sm\:grid-cols-3.md\:grid-cols-4.lg\:grid-cols-6 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Réduction de la hauteur des images dans les grilles */
+    .h-40 {
+        height: 160px !important;
+    }
+    
+    /* Réduction de la taille des titres */
+    h1.text-3xl {
+        font-size: 1.5rem !important;
+    }
+    
+    h2.text-2xl {
+        font-size: 1.25rem !important;
+    }
+}
+
+/* Fix pour les notifications sur mobile */
+.notification {
+    width: 90%;
+    max-width: 300px;
+    right: 5%;
+    left: auto;
+}
+
+/* Améliorer l'affichage du formulaire de commentaire sur mobile */
+@media (max-width: 768px) {
+    textarea, input[type="text"], input[type="password"], input[type="email"] {
+        width: 100% !important;
+    }
+    
+    form button {
+        width: 100% !important;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Styles pour la barre de navigation inférieure */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    background-color: #000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Styles pour les icônes de la barre de navigation inférieure */
+.bottom-nav-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    transition: all 0.3s ease;
+}
+
+.bottom-nav-icon:hover {
+    color: #ef4444; /* Tailwind red-500 */
+}
+
+/* Padding pour le contenu principal pour éviter qu'il soit caché par la navbar fixe du bas */
+@media (max-width: 767px) {
+    .main-content {
+        padding-bottom: 80px;
+    }
+}
+
+/* Amélioration des menus déroulants sur mobile */
+@media (max-width: 768px) {
+    #language-menu, #user-menu {
+        width: 100%;
+        left: 0;
+        right: 0;
+        border-radius: 0;
+    }
+}
+
+/* Styles spécifiques pour le mode desktop */
+@media (min-width: 768px) {
+    .search-container {
+        max-width: 400px;
+    }
+} 

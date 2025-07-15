@@ -1,8 +1,0 @@
-.favorite-btn {
-    cursor: pointer;
-    z-index: 10;
-}
-
-.favorite-btn:hover {
-    transform: scale(1.1);
-} 

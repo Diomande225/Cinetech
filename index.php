@@ -1,116 +1,97 @@
 <?php
-session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/src/Lang/helpers.php';
 
-// Inclure la configuration
-require_once 'config/database.php';
-require_once 'config/api_config.php';
+use App\Router;
+use App\Controllers\HomeController;
+use App\Controllers\MoviesController;
+use App\Controllers\TvseriesController;
+use App\Controllers\FavorisController;
+use App\Controllers\RegisterController;
+use App\Controllers\LoginController;
+use App\Controllers\DetailController;
+use App\Controllers\SearchController;
+use App\Controllers\ProfileController;
+use App\Controllers\CommentController;
+use App\Controllers\LanguageController;
+use App\Controllers\AdminController;
 
-// Inclure les autres fichiers nécessaires
-require_once 'classes/Database.php';
-require_once 'classes/TMDBApi.php';
-require_once 'includes/helpers.php';
-require_once 'controllers/HomeController.php';
-require_once 'controllers/AuthController.php';
-require_once 'controllers/MovieController.php';
-require_once 'controllers/TVShowController.php';
-require_once 'controllers/FavoritesController.php';
-require_once 'controllers/SearchController.php';
+$router = new Router();
 
-// Récupérer l'URL demandée
-$request_uri = $_SERVER['REQUEST_URI'];
-$base_path = '/Cinetech';
-$path = str_replace($base_path, '', $request_uri);
-$path = parse_url($path, PHP_URL_PATH);
+// Définir le chemin de base
+$basePath = '/Cinetech';
+
+// Définir les routes
+$router->add('home', HomeController::class, 'index');
+$router->add('movies', MoviesController::class, 'films');
+$router->add('tvseries', TvseriesController::class, 'series');
+$router->add('favoris', FavorisController::class, 'favoris');
+$router->add('login', LoginController::class, 'login');
+$router->add('register', RegisterController::class, 'register');
+
+// Routes pour les détails et la recherche
+$router->add('detail/:mediaType/:id', DetailController::class, 'show');
+$router->add('actor/:id', DetailController::class, 'actor');
+$router->add('search/autocomplete', SearchController::class, 'autocomplete');
+
+// Routes pour les favoris
+$router->add('favoris/add', FavorisController::class, 'addFavori');
+$router->add('favoris/remove', FavorisController::class, 'removeFavori');
+
+// Routes pour les commentaires
+$router->add('comments/:itemType/:itemId', CommentController::class, 'show');
+$router->add('add-comment', CommentController::class, 'addComment');
+$router->add('delete-comment', CommentController::class, 'deleteComment');
+
+// Routes pour le profil et la déconnexion
+$router->add('profile', ProfileController::class, 'show');
+$router->add('logout', LoginController::class, 'logout');
+
+// Routes pour voir tous les commentaires
+$router->add('comments/:mediaType/:id', CommentController::class, 'showAllComments');
+$router->add('allComments/:mediaType/:id', CommentController::class, 'showAllComments');
+
+// Route pour changer la langue
+$router->add('language/change/:lang', LanguageController::class, 'changeLanguage');
+
+// Routes pour l'administration
+$router->add('admin', AdminController::class, 'dashboard');
+$router->add('admin/comments/delete/:id', AdminController::class, 'deleteComment');
+$router->add('admin/users/activate/:id', AdminController::class, 'activateUser');
+$router->add('admin/users/deactivate/:id', AdminController::class, 'deactivateUser');
+$router->add('admin/users/delete/:id', AdminController::class, 'deleteUser');
+$router->add('admin/users/details/:id', AdminController::class, 'getUserDetails');
+$router->add('admin/users/update/:id', AdminController::class, 'updateUser');
+$router->add('admin/users/create', AdminController::class, 'createUser');
+
+// Obtenir le chemin URL actuel
+$url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Debug
-error_log("Requested Path: " . $path);
+error_log("Request URI: " . $_SERVER['REQUEST_URI']);
+error_log("Base Path: " . $basePath);
+error_log("URL before processing: " . $url);
 
-// Routes dynamiques pour les détails des films
-if (preg_match('#^/movie/(\d+)$#', $path, $matches)) {
-    $controller = new MovieController();
-    return $controller->show($matches[1]);
+// Si l'URL commence par le chemin de base (insensible à la casse), le retirer
+if (stripos($url, $basePath) === 0) {
+    $url = substr($url, strlen($basePath));
 }
 
-// Routes dynamiques pour les détails des séries
-if (preg_match('#^/tv-show/(\d+)$#', $path, $matches)) {
-    $controller = new TVShowController();
-    return $controller->show($matches[1]);
+// Nettoyer l'URL
+$url = trim($url, '/');
+
+// Si l'URL est vide, rediriger vers home
+if ($url === '') {
+    $url = 'home';
 }
 
-// Routes API
-if (strpos($path, '/api/') === 0) {
-    header('Content-Type: application/json');
-    switch ($path) {
-        case '/api/favorites/toggle':
-            $controller = new FavoriteController();
-            return $controller->toggle();
-        case '/api/search':
-            $controller = new SearchController();
-            return $controller->search();
-        default:
-            http_response_code(404);
-            echo json_encode(['error' => 'Route non trouvée']);
-            exit;
-    }
-}
+error_log("Processed URL: " . $url);
 
-// Routes standards
+// Dispatcher la route
 try {
-    switch ($path) {
-        case '/':
-            $home = new HomeController();
-            $home->index();
-            break;
-            
-        case '/movies':
-            $movies = new MovieController();
-            $movies->index();
-            break;
-            
-        case '/tv-shows':
-            $tvShows = new TVShowController();
-            $tvShows->index();
-            break;
-            
-        case '/login':
-            $auth = new AuthController();
-            $auth->login();
-            break;
-            
-        case '/register':
-            $auth = new AuthController();
-            $auth->register();
-            break;
-            
-        case '/logout':
-            $auth = new AuthController();
-            $auth->logout();
-            break;
-            
-        case '/favorites':
-            $favorites = new FavoritesController();
-            $favorites->index();
-            break;
-            
-        case '/profile':
-            $user = new UserController();
-            $user->profile();
-            break;
-            
-        case '/search':
-            $search = new SearchController();
-            $search->index();
-            break;
-            
-        default:
-            http_response_code(404);
-            require 'views/404.php';
-            break;
-    }
+    $router->dispatch($url);
 } catch (Exception $e) {
-    error_log($e->getMessage());
-    require 'views/404.php';
+    error_log("Router error: " . $e->getMessage());
+    http_response_code(404);
+    echo "404 Non Trouvé : " . $e->getMessage();
 }
-?>

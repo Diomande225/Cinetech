@@ -1,0 +1,109 @@
+.favori-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.favori-button i {
+    font-size: 4rem !important;
+    color: #9ca3af;
+    transition: all 0.3s ease;
+}
+
+.favori-button.active i {
+    color: #ef4444;
+    filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.5));
+}
+
+.favori-button:hover i {
+    transform: scale(1.2);
+}
+
+/* Styles spécifiques pour garantir que l'icône est bien visible */
+button.favori-button i.fa-heart,
+button.favori-button i.fas,
+button.favori-button i.far {
+    font-size: 4rem !important;
+    display: inline-block !important;
+    line-height: 1 !important;
+}
+
+.notification {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: 500;
+    z-index: 50;
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification.success {
+    background-color: #10b981;
+}
+
+.notification.error {
+    background-color: #ef4444;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.favoris-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+.favori-item {
+    background-color: #1f2937;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.favori-item:hover {
+    transform: translateY(-5px);
+}
+
+.favori-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.favori-item-content {
+    padding: 1rem;
+}
+
+.favori-item-title {
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.favori-item-type {
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.no-favoris {
+    text-align: center;
+    padding: 2rem;
+    color: #9ca3af;
+    font-size: 1.125rem;
+} 
