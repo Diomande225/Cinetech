@@ -100,7 +100,7 @@
                             </div>
                         </div>
                     <?php else: ?>
-                        <a href="/Cinetech/login" class="hover:text-red-600 transition">S'identifier</a>
+                        <a href="/Cinetech/auth/login" class="hover:text-red-600 transition">S'identifier</a>
                     <?php endif; ?>
                 </div>
             </div>
